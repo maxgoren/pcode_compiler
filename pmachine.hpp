@@ -14,10 +14,12 @@ class PCodeVM {
         vector<Instruction> codePage;
         vector<Value> stack;
         Instruction curr;
-        int sp;
-        int ip;
-        int bp;
-        int lv;
+        int sp; //stack pointer
+        int ip; //instruction pointer
+        int bp; //base pointer
+        int sl; //dynamic link
+        int dl; //static link
+        int ra; //return addr
         Instruction current() {
             return curr;
         }
@@ -61,7 +63,8 @@ class PCodeVM {
             ip = 0;
             bp = 1;
             sp = bp;
-            lv = 0;
+            dl = 0;
+            sl = 0;
             stack.reserve(MAX_STACK);
             codePage.reserve(MAX_STACK);
             should_trace = trace;
@@ -115,6 +118,35 @@ class PCodeVM {
                         int addr = os < 2000 ? getInteger(stack[bp+1])+4 + os:os;
                         stack[sp] = stack[addr];
                     } break;
+                    case LDI: {
+                        int indAddr = 0;
+                        if (getInteger(stack[sp]) > 2000) {
+                            indAddr = getInteger(stack[sp]) - getInteger(current().operand);
+                        } else {
+                            indAddr = getInteger(stack[sp]) + getInteger(current().operand);
+                        }
+                        cout<<"Base Addr:  "<<getInteger(stack[sp])<<endl;
+                        cout<<"Offset:     "<<getInteger(current().operand)<<endl;
+                        cout<<"Indirected: "<<indAddr<<endl;
+                        stack[sp] = stack[indAddr];
+                    } break;
+                    case IXA: {
+                        int tsval = getReal(stack[sp]);
+                        int scale = getInteger(current().operand); 
+                        int base = getInteger(stack[sp-1]);
+                        int ixAddr = 0;
+                        if (base > 2000) {
+                            ixAddr = base - (tsval * scale);
+                        } else {
+                            ixAddr = base + (tsval * scale);
+                        }
+                        cout<<"Base Addr: "<<base<<endl;
+                        cout<<"Scaling: "<<scale<<endl;
+                        cout<<"offset : "<<tsval<<endl;
+                        cout<<"Indexed Address: "<<ixAddr<<endl;
+                        sp -= 1;
+                        stack[sp] = makeInt(ixAddr);
+                    } break;
                     case STO: {
                         int addr = calculateAddress(getInteger(stack[sp-1]));
                         stack[addr] = stack[sp];
@@ -132,14 +164,14 @@ class PCodeVM {
                         sp -= 1;
                     } break;
                     case MST: {
-                        stack[sp+1] = makeInt(bp);
-                        stack[sp+2] = makeInt(bp);
-                        stack[sp+3] = makeInt(ip);
+                        stack[sp+1] = makeInt(bp); dl = sp+1;
+                        stack[sp+2] = makeInt(bp); sl = sp+2;
+                        stack[sp+3] = makeInt(ip); ra = sp+3;
                         bp = sp+1;
                         sp += 4;
                     } break;
                     case CAL: {
-                        stack[bp+2] = makeInt(ip);
+                        stack[bp+2] = makeInt(ip); ra = ip;
                         ip = findLabel(getString(current().operand), ENT);
                     } break;
                     case ENT: {
@@ -149,8 +181,10 @@ class PCodeVM {
                         stack[bp] = stack[sp];
                         sp = bp;
                         ip = getInteger(stack[bp+2]);
-                        bp = getInteger(stack[bp+1]);
-                        lv--;
+                        bp = getInteger(stack[bp+1]); 
+                        dl = bp; 
+                        sl = bp+1;
+                        ra = bp+2;
                     } break;
                     case ADD: {
                         sp -= 1;
@@ -226,16 +260,27 @@ class PCodeVM {
         }
         void printStack() {
             int arn = 0;
-            cout<<"BP: "<<bp<<", SP: "<<sp<<" "<<endl;
+            cout<<"[---------------------------------------------------]"<<endl;
+            cout<<"Heap: ";
+            for (int i = 2999; i > 2980 && stack[i].type != AS_NIL; i--) 
+                cout<<"["<<i<<": "<<*toString(stack[i])<<"] ";
+            cout<<endl;
+            cout<<"------------------------"<<endl;
+            cout<<"Stack: BP: "<<bp<<", SP: "<<sp<<" "<<endl;
             cout<<"{ ";
-            for (int i = 1; i <= sp; i++) {
-                if (i == bp) cout<<"\n(BP ";
-                if (i == sp) cout<<"SP";
+            for (int i = 0; i <= sp+15; i++) {
+                if (i == bp) cout<<"(BP: ";
+                if (i == sp) cout<<"SP: ";
+                if (sl != 0) {
+                    if (i == sl) cout<<"SL: ";
+                    if (i == dl) cout<<"DL: ";
+                    if (i == ra) cout<<"RA: ";
+                }
                 cout<<"["<<i<<": "<<*toString(stack[i])<<"] ";
                 if (i == sp) cout<<") ";
             }
             cout<<"}"<<endl;
-            cout<<"------------"<<endl;
+            cout<<"[---------------------------------------------------]"<<endl;
         }
 };
 

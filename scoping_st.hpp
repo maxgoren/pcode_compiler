@@ -4,14 +4,14 @@
 using namespace std;
 
 
-const int TABLE_SIZE = 211;
+const int TABLE_SIZE = 256;
 
 int hashf(string key) {
     unsigned int h = 5781;
     for (char c : key) {
         h = (33 * h + (int)c);
     }
-    return h % TABLE_SIZE;
+    return h & (TABLE_SIZE-1);
 }
 
 enum DefType {
@@ -122,15 +122,27 @@ class ScopingSymbolTable {
             scopeDepth = 0;
             localAddr = 3000;
         }
-        void insertVar(string name) {
+        void insertVar(string name, int size) {
             int idx = hashf(name);
             for (STEntry* it = scope->table[idx]; it != nullptr; it = it->next) {
                 if (it->name == name)
                     return;
             }
-            STEntry* nent = makeLocalVarEntry(name, scopeIsGlobal() ? --localAddr:scope->numEntries++, scopeDepth);
+            int addr = 0;
+            if (scopeIsGlobal()) {
+                addr = localAddr;
+                localAddr -= size;
+            } else {
+                if (size == 1) size = 0;
+                addr = scope->numEntries + size;
+                scope->numEntries += size;
+            }
+            STEntry* nent = makeLocalVarEntry(name, addr, scopeDepth);
             nent->next = scope->table[idx]; 
             scope->table[idx] = nent;
+        }
+        void insertVar(string name) {
+            insertVar(name, 1);
         }
         LocalVar* getVar(string name) {
             STEntry* ent = get(name, VARDEF);

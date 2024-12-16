@@ -29,8 +29,8 @@ class ASTBuilder {
             StringBuffer sb;
             sb.init(str);
             TokenStream ts = lexer.lex(sb);
-            ASTNode* ast = parser.parse(ts);
             printTokens(ts);
+            ASTNode* ast = parser.parse(ts);
             printAST(ast);
             return ast;
         }

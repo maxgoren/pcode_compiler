@@ -28,7 +28,7 @@ class Lexer {
         Token extractId(StringBuffer& sb) {
             string id;
             while (!sb.done()) {
-                if (isalpha(sb.get())) {
+                if (isalpha(sb.get()) || isdigit(sb.get())) {
                     id.push_back(sb.get());
                     sb.advance();
                 } else break;
@@ -71,6 +71,8 @@ class Lexer {
                 case ')': return Token(TK_RP, ")");
                 case '{': return Token(TK_LC, "{");
                 case '}': return Token(TK_RC, "}");
+                case '[': return Token(TK_LB, "[");
+                case ']': return Token(TK_RB, "]");
                 case '&': return Token(TK_AMPER, "&");
                 case '.': return Token(TK_PERIOD, ".");
                 case ',': return Token(TK_COMA, ",");

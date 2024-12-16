@@ -2,6 +2,7 @@
 #define parser_hpp
 #include <iostream>
 #include <vector>
+#include "scoping_st.hpp"
 #include "syntaxtree.hpp"
 #include "token.hpp"
 #include "tokenstream.hpp"
@@ -42,7 +43,6 @@ class Parser {
             }
             return false;
         }
-        
     public:
         Parser() {
 
@@ -52,6 +52,7 @@ class Parser {
             ASTNode* node = program();
             return node;
         }
+    private:
         ASTNode* program() {
             ASTNode* node = statementList();
             return node;
@@ -76,14 +77,7 @@ class Parser {
             ASTNode* node = nullptr;;
             switch (lookahead().symbol) {
                 case TK_LET: {
-                    node = makeStmtNode(LET_STMT, lookahead());
-                    match(TK_LET);
-                    node->data = lookahead();
-                    match(TK_ID);
-                    if (expect(TK_ASSIGN)) {
-                        match(TK_ASSIGN);
-                        node->child[0] = simpleExpr();
-                    }
+                    node = letStatement();
                 } break;
                 case TK_PRINT: {
                     node = makeStmtNode(PRINT_STMT, lookahead());
@@ -129,13 +123,25 @@ class Parser {
                 case TK_NUM: {
                     node = makeStmtNode(EXPR_STMT, lookahead());
                     ASTNode* t = simpleExpr();
-                    if (t->nk == STMT_NODE && t->type.stmt == ASSIGN_STMT) {
-                        delete node;
-                        return t;
-                    }
                     node->child[0] = t;
                 } break;
                 default: break;
+            }
+            return node;
+        }
+        ASTNode* letStatement() {
+            ASTNode* node = makeStmtNode(LET_STMT, lookahead());
+            match(TK_LET);
+            node->data = lookahead();
+            match(TK_ID);
+            if (expect(TK_LB)) {
+                match(TK_LB);
+                node->child[0] = makeExprNode(SUBSCRIPT_EXPR, lookahead());
+                node->child[0]->child[0] = simpleExpr();
+                match(TK_RB);
+            } else if (expect(TK_ASSIGN)) {
+                match(TK_ASSIGN);
+                node->child[0] = simpleExpr();
             }
             return node;
         }
@@ -203,13 +209,20 @@ class Parser {
             if (expect(TK_ID)) {
                 node = makeExprNode(ID_EXPR, lookahead());
                 match(TK_ID);
-                if (expect(TK_ASSIGN)) {
-                    node->nk = STMT_NODE;
-                    node->type.stmt = ASSIGN_STMT;
-                    match(TK_ASSIGN);
-                    node->child[0] = simpleExpr();
+                if (expect(TK_LB)) {
+                    ASTNode* t = makeExprNode(SUBSCRIPT_EXPR, lookahead());
+                    match(TK_LB);
+                    t->child[0] = simpleExpr();
+                    match(TK_RB);
+                    node->child[0] = t;
                 }
-                if (expect(TK_LP)) {
+                if (expect(TK_ASSIGN)) {
+                    ASTNode* t = makeExprNode(ASSIGN_EXPR, lookahead());
+                    match(TK_ASSIGN);
+                    t->child[0] = node;
+                    node = t;
+                    node->child[1] = simpleExpr();
+                } else if (expect(TK_LP)) {
                     ASTNode* t = makeExprNode(FUNC_EXPR, lookahead());
                     match(TK_LP);
                     t->data = node->data;
@@ -235,13 +248,15 @@ class Parser {
                 match(TK_LP);
                 if (!expect(TK_RP)) {
                     node->child[0] = paramList();
-                } else 
-                match(TK_RP);
+                    match(TK_RP);
+                } else {
+                    match(TK_RP);
+                }
                 if (expect(TK_LC)) {
                     match(TK_LC);
                     node->child[1] = statementList();
                     match(TK_RC);
-                    return node;
+
                 } else if (expect(TK_PRODUCES)) {
                     match(TK_PRODUCES);
                     node->child[1] = statement();
@@ -261,11 +276,10 @@ class Parser {
             return m;
         }
         ASTNode* paramList() {
-                match(TK_LET);
-                ASTNode* m = makeStmtNode(LET_STMT, lookahead());
-                ASTNode* c = m;
-                match(TK_ID);
-
+            match(TK_LET);
+            ASTNode* m = makeStmtNode(LET_STMT, lookahead());
+            ASTNode* c = m;
+            match(TK_ID);
             while (!expect(TK_RP)) {
                 match(TK_COMA);
                 match(TK_LET);
