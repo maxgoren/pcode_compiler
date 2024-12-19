@@ -79,6 +79,15 @@ class Parser {
                 case TK_LET: {
                     node = letStatement();
                 } break;
+                case TK_STRUCT: {
+                    node = makeStmtNode(STRUCT_STMT, lookahead());
+                    match(TK_STRUCT);
+                    node->data.strval = lookahead().strval;
+                    match(TK_ID);
+                    match(TK_LC);
+                    node->child[0] = statementList();
+                    match(TK_RC);
+                } break;
                 case TK_PRINT: {
                     node = makeStmtNode(PRINT_STMT, lookahead());
                     match(TK_PRINT);
@@ -168,26 +177,17 @@ class Parser {
             return node;
         }
         ASTNode* term() {
-            ASTNode* node = prim();
+            ASTNode* node = factor();
             while (expect(TK_MUL) || expect(TK_DIV)) {
                 ASTNode* t = makeExprNode(BINOP_EXPR, lookahead());
                 match(lookahead().symbol);
                 t->child[0] = node;
-                t->child[1] = prim();
+                t->child[1] = factor();
                 node = t;
             }
             return node;
         }
         ASTNode* factor() {
-            /*ASTNode* m = factor();
-            while (expect(TK_SUB)) {
-                ASTNode* t = makeExprNode(UNOP_EXPR, lookahead());
-                t->child[0] = m;
-                m = t;
-            }*/
-            return prim();
-        }
-        ASTNode* prim() {
             ASTNode* node = nullptr;
             if (expect(TK_NUM)) {
                 node = makeExprNode(CONST_EXPR, lookahead());
@@ -214,6 +214,12 @@ class Parser {
                     match(TK_LB);
                     t->child[0] = simpleExpr();
                     match(TK_RB);
+                    node->child[0] = t;
+                } else if (expect(TK_PERIOD)) {
+                    ASTNode* t = makeExprNode(FIELD_EXPR, lookahead());
+                    match(TK_PERIOD);
+                    t->child[0] = makeExprNode(ID_EXPR, lookahead());
+                    match(TK_ID);
                     node->child[0] = t;
                 }
                 if (expect(TK_ASSIGN)) {

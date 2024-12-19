@@ -115,6 +115,12 @@ class PCodeGenerator {
                     break;
             }
         }
+        bool hasSubscript(ASTNode* node) {
+            return (node->child[0] != nullptr && node->child[0]->nk == EXPR_NODE && node->child[0]->type.expr == SUBSCRIPT_EXPR);
+        }
+        bool hasField(ASTNode* node) {
+            return (node->child[0] != nullptr && node->child[0]->nk == EXPR_NODE && node->child[0]->type.expr == FIELD_EXPR);
+        }
         void genExpr(ASTNode* node, bool isAddr) {
             switch (node->type.expr) {
                 case ID_EXPR: {
@@ -124,13 +130,25 @@ class PCodeGenerator {
                         emit(HALT);
                         return;
                     }
-                    if (isAddr || (node->child[0] != nullptr && node->child[0]->nk == EXPR_NODE && node->child[0]->type.expr == SUBSCRIPT_EXPR)) {
+                    if (isAddr || hasSubscript(node) || hasField(node)) {
                         emit(LDA, makeInt(lv->loc), makeInt(0));
                     } else {
                         emit(genparam ? LDP:LOD, makeInt(lv->loc), makeInt(0));
                     }
-                    if (node->child[LEFTCHILD] != nullptr) 
-                        genExpr(node->child[LEFTCHILD], isAddr);
+                    if (node->child[LEFTCHILD] != nullptr) {
+                        if (hasField(node)) {
+                            st.openStruct(node);
+                            genExpr(node->child[LEFTCHILD], isAddr);
+                            st.closeStruct();
+                        } else {
+                            genExpr(node->child[LEFTCHILD], isAddr);
+                        }
+                    }
+                } break;
+                case FIELD_EXPR: {
+                    genCodeNS(node->child[LEFTCHILD], true);
+                    emit(IXA, makeInt(1), makeInt(0));
+                    if (!isAddr) emit(LDI, makeInt(0));
                 } break;
                 case SUBSCRIPT_EXPR: {
                     genCodeNS(node->child[LEFTCHILD], false);
@@ -217,7 +235,7 @@ class PCodeGenerator {
                         switch (node->type.stmt) {
                             case LET_STMT: {
                                 if (st.getVar(node->data.strval) == nullptr) {
-                                    if (node->child[0] != nullptr && node->child[0]->nk == EXPR_NODE && node->child[0]->type.expr == SUBSCRIPT_EXPR) {
+                                    if (hasSubscript(node)) {
                                         st.insertVar(node->data.strval, atoi(node->child[0]->data.strval.data()));
                                         cout<<node->data.strval<<" added to symbol table as an array of size "<<atoi(node->child[0]->data.strval.data())<<endl;
                                     } else {
@@ -226,11 +244,33 @@ class PCodeGenerator {
                                     }
                                 }                                
                             } break;
+                            case STRUCT_STMT: {
+                                if (st.getVar(node->data.strval) == nullptr) {
+                                    st.openStruct(node);
+                                    buildST(node->child[0]);
+                                    buildST(node->child[1]);
+                                    st.closeStruct();
+                                    buildST(node->next);
+                                    cout<<node->data.strval<<" added to symbol table"<<endl;
+                                    return;
+                                }
+                            } break;
                         };
                         break;
                     case EXPR_NODE: 
                         switch (node->type.expr) {
                             case ID_EXPR: {
+                                if (hasField(node)) {
+                                    ASTNode* t = node->child[0];
+                                    Scope* ts = st.getStruct(node->data.strval);
+                                    if (ts != nullptr) {
+                                        cout<<"Getting field "<<t->child[0]->data.strval<<" ";
+                                        LocalVar* field = st.getFieldFromStruct(ts, t->child[0]->data.strval);
+                                        if (field != nullptr) {
+                                            return;
+                                        }
+                                    }
+                                }
                                 if (st.getVar(node->data.strval) == nullptr) {
                                     cout<<"Error: undeclared ass variable trying to be used: "<<node->data.strval<<endl;
                                 }     
@@ -265,8 +305,9 @@ class PCodeGenerator {
         }
         vector<Instruction> generate(ASTNode* node) {
             init();
-            st.print();
+            cout<<"Building Symbol Table: "<<endl;
             buildST(node);
+            st.print();
             cout<<"Generating P-Code..."<<endl;
             genCode(node, false);
             emit(HALT);

@@ -5,7 +5,7 @@
 using namespace std;
 
 enum ValueType {
-    AS_INT, AS_BOOL, AS_REAL, AS_STRING, AS_FUNC, AS_NIL
+    AS_INT, AS_BOOL, AS_REAL, AS_STRING, AS_FUNC, AS_NIL, AS_ARRDEF
 };
 
 struct String {
@@ -44,6 +44,14 @@ struct Value {
         Function* funcval;
     };
 };
+
+bool isRealAnInteger(double val) {
+    string num = to_string(val);
+    int i = 0;
+    while (i < num.size() && num[i++] != '.');
+    while (i < num.size() && num[i++] == '0');
+    return i == num.size();
+}
 
 Value makeInt(int n) {
     Value nv;

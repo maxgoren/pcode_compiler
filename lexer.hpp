@@ -60,6 +60,7 @@ class Lexer {
             if (id == "return")  return Token(TK_RETURN, "return");
             if (id == "while")   return Token(TK_WHILE, "while");
             if (id == "func")    return Token(TK_AMPER, "func");
+            if (id == "struct")  return Token(TK_STRUCT, "struct");
             return Token(TK_ID, id);
         }
         Token checkSpecials(StringBuffer& sb) {

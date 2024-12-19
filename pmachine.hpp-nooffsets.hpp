@@ -6,6 +6,26 @@
 #include "vminst.hpp"
 using namespace std;
 
+/*
+ Stack frames layout:
+
+ BP
+ -----
+ DL
+ ------
+ SL
+ -------
+ RA
+------
+Parameters
+------
+Locals
+-----
+SP
+
+
+*/
+
 
 class PCodeVM {
     private:
@@ -33,7 +53,7 @@ class PCodeVM {
                 np = getValue(stack[np+1]);
                 lvl--;
             }
-            return np+4;
+            return np;
         }
         int getValue(Value val) {
             return  val.type == AS_INT ? getInteger(val):getReal(val);
@@ -47,6 +67,7 @@ class PCodeVM {
                 cout<<"Calculated bn: "<<bn<<endl;
                 cout<<"Calculated ad: "<<bn+offset<<endl;
             }
+            if (bn+offset == bp) bn++;
             return bn+offset;
         }
         int findLabel(String* str, Inst instType) {
@@ -64,38 +85,6 @@ class PCodeVM {
             ip++;
             if (should_trace)
                 cout<<"Executing: "<<ip<<": "<<instStr[current().instruction]<<" "<<*toString(current().operand)<<" "<<*toString(current().nestlevel)<<endl;
-        }
-        void doJump() {
-            int next = findLabel(getString(current().operand), LAB);
-            ip = next;
-        }
-        void jumpConditional() {
-            if (getBoolean(stack[sp]) == false) {
-                int next = findLabel(getString(current().operand), LAB);
-                ip = next;
-            }
-            sp--;
-            stack[sp+1] = makeInt(0);
-        }
-        void loadConstant() {
-            sp += 1;
-            stack[sp] = current().operand;
-        }
-        void loadFromAddress() {
-            sp += 1;
-            int addr = calculateAddress(getInteger(current().operand));
-            stack[sp] = stack[addr];
-        }
-        void loadAddress() {
-            sp += 1;
-            int addr = calculateAddress(getInteger(current().operand));
-            stack[sp] = makeInt(addr);
-        }
-        void loadParam() {
-            sp += 1;
-            int os = getValue(current().operand);
-            int addr = os < 2000 ? getValue(stack[bp+1])+4 + os:os;
-            stack[sp] = stack[addr];
         }
         void indirectLoad() {
             int indAddr = 0;
@@ -132,41 +121,26 @@ class PCodeVM {
             sp -= 1;
             stack[sp] = makeInt(ixAddr);
         }
-        void storeDestructive() {
-            int addr = calculateAddress(getValue(stack[sp-1]));
-            stack[addr] = stack[sp];
-            sp -= 2;
-        }
-        void storeParam() {
-            int addr = calculateAddress(getValue(stack[sp]));
-            stack[addr] = stack[sp-1];
-            sp -= 2;
-        }
-        void storeNonDestructive() {
-            int addr = calculateAddress(getValue(stack[sp-1]));
-            stack[addr] = stack[sp];
-            stack[sp-1] = stack[sp];
-            sp -= 1;
-        }
         void markStack() {
             stack[sp+1] = makeInt(bp); dl = sp+1;
             stack[sp+2] = makeInt(bp); sl = sp+2;
             stack[sp+3] = makeInt(ip); ra = sp+3;
-            bp = sp+1;
+            mp = sp+1;
             sp += 4;
+            bp = sp-1;
         }
-        void callProcedure() {
-            stack[bp+2] = makeInt(ip); ra = ip;
+        void callProcdeure() {
+            stack[mp+2] = makeInt(ip); ra = ip;
             ip = findLabel(getString(current().operand), ENT);
         }
         void returnFromProcedure() {
             stack[bp] = stack[sp];
+            ip = getInteger(stack[mp+2]);
+            bp = getInteger(stack[mp+1]); 
+            dl = mp; 
+            sl = mp+1;
+            ra = mp+2;
             sp = bp;
-            ip = getInteger(stack[bp+2]);
-            bp = getInteger(stack[bp+1]); 
-            dl = bp+1; 
-            sl = bp+2;
-            ra = bp+3;
         }
         void binaryOperator() {
             switch (current().instruction) {
@@ -212,16 +186,20 @@ class PCodeVM {
                 } break;
             };
         }
-        inline void nop() { }
+        void nop() { }
     public:
         PCodeVM(bool trace = false) {
-            ip = 0;
-            bp = 0;
-            sp = 4;
-            dl = 0;
-            sl = 0;
             stack.reserve(MAX_STACK);
             codePage.reserve(MAX_STACK);
+            ip = 0;
+            bp = 0;
+            mp = 0;
+            sp = 4;
+            dl = 1;
+            sl = 2;
+            ra = 3;
+            stack[dl] = makeInt(dl);
+            stack[sl] = makeInt(sl);
             should_trace = trace;
         }
         void setTrace(bool trace) {
@@ -237,25 +215,41 @@ class PCodeVM {
                 nextInstruction();
                 switch(current().instruction) {
                     case LAB: {
-                        nop();
+
                     } break;
                     case JMP: {
-                        doJump();
+                            int next = findLabel(getString(current().operand), LAB);
+                            //cout<<"jump to label at: "<<next<<endl;
+                            ip = next;
                     } break;
                     case JPC: {
-                        jumpConditional();
+                        if (getBoolean(stack[sp]) == false) {
+                            int next = findLabel(getString(current().operand), LAB);
+                            //cout<<"jump to label at: "<<next<<endl;
+                            ip = next;
+                        }
+                        sp--;
+                        stack[sp+1] = makeInt(0);
                     } break;
                     case LDC: {
-                        loadConstant();
+                        sp += 1;
+                        stack[sp] = current().operand;
                     } break;
                     case LOD: {
-                        loadFromAddress();
+                        sp += 1;
+                        int addr = calculateAddress(getInteger(current().operand));
+                        stack[sp] = stack[addr];
                     } break;
                     case LDA: {
-                        loadAddress();
+                        sp += 1;
+                        int addr = calculateAddress(getInteger(current().operand));
+                        stack[sp] = makeInt(addr);
                     } break;
                     case LDP: {
-                        loadParam();
+                        sp += 1;
+                        int os = getValue(current().operand);
+                        int addr = os < 2000 ? getValue(stack[bp+1])+4 + os:os;
+                        stack[sp] = stack[addr];
                     } break;
                     case LDI: {
                         indirectLoad();
@@ -264,19 +258,26 @@ class PCodeVM {
                         indexedAccess();
                     } break;
                     case STO: {
-                        storeDestructive();
+                        int addr = calculateAddress(getValue(stack[sp-1]));
+                        stack[addr] = stack[sp];
+                        sp -= 2;
                     } break;
                     case STP: {
-                        storeParam();
+                        int addr = calculateAddress(getValue(stack[sp]));
+                        stack[addr] = stack[sp-1];
+                        sp -= 2;
                     } break;
                     case STN: {
-                        storeNonDestructive();
+                        int addr = calculateAddress(getValue(stack[sp-1]));
+                        stack[addr] = stack[sp];
+                        stack[sp-1] = stack[sp];
+                        sp -= 1;
                     } break;
                     case MST: {
                         markStack();
                     } break;
                     case CAL: {
-                        callProcedure();
+                        callProcdeure();
                     } break;
                     case ENT: {
                         nop();
@@ -321,6 +322,7 @@ class PCodeVM {
             cout<<"{ ";
             for (int i = 0; i <= sp; i++) {
                 if (i == bp) cout<<"(BP: ";
+                if (i == mp) cout<<" MP: ";
                 if (i == sp) cout<<"SP: ";
                 if (sl != 0) {
                     if (i == sl) cout<<"SL: ";
