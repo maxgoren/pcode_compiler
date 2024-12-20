@@ -53,14 +53,21 @@ class Lexer {
         }
         Token checkReserved(string id) {
             if (id == "if")      return Token(TK_IF, "if");
+            if (id == "do")      return Token(TK_DO, "do");
             if (id == "else")    return Token(TK_ELSE, "else");
+            if (id == "then")    return Token(TK_THEN, "then");
             if (id == "let")     return Token(TK_LET, "let");
             if (id == "var")     return Token(TK_LET, "var");
             if (id == "println") return Token(TK_PRINT, "println");
             if (id == "return")  return Token(TK_RETURN, "return");
             if (id == "while")   return Token(TK_WHILE, "while");
             if (id == "func")    return Token(TK_AMPER, "func");
+            if (id == "procedure") return Token(TK_AMPER, "procedure");
             if (id == "struct")  return Token(TK_STRUCT, "struct");
+            if (id == "record")  return Token(TK_STRUCT, "record");
+            if (id == "begin")   return Token(TK_LC, "begin");
+            if (id == "end")     return Token(TK_RC, "end");
+            if (id == "new")     return Token(TK_NEW, "new");
             return Token(TK_ID, id);
         }
         Token checkSpecials(StringBuffer& sb) {

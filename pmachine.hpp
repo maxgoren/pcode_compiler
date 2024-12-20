@@ -1,11 +1,11 @@
 #ifndef pmachine_hpp
 #define pmachine_hpp
+#include <iomanip>
 #include <iostream>
 #include <vector>
 #include "value.hpp"
 #include "vminst.hpp"
 using namespace std;
-
 
 class PCodeVM {
     private:
@@ -97,6 +97,12 @@ class PCodeVM {
             int addr = os < 2000 ? getValue(stack[bp+1])+4 + os:os;
             stack[sp] = stack[addr];
         }
+        void loadField() {
+            sp += 1;
+            int os = getValue(current().operand);
+            int addr = os < 2000 ? getValue(stack[bp+1])+1 + os:os;
+            stack[sp] = makeInt(addr);
+        }
         void indirectLoad() {
             int indAddr = 0;
             int base = getValue(stack[sp]);
@@ -156,7 +162,7 @@ class PCodeVM {
             sp += 4;
         }
         void callProcedure() {
-            stack[bp+2] = makeInt(ip); ra = ip;
+            stack[bp+2] = makeInt(ip); ra = bp+2;
             ip = findLabel(getString(current().operand), ENT);
         }
         void returnFromProcedure() {
@@ -164,9 +170,9 @@ class PCodeVM {
             sp = bp;
             ip = getInteger(stack[bp+2]);
             bp = getInteger(stack[bp+1]); 
-            dl = bp+1; 
-            sl = bp+2;
-            ra = bp+3;
+            dl = bp; 
+            sl = bp+1;
+            ra = bp+2;
         }
         void binaryOperator() {
             switch (current().instruction) {
@@ -218,8 +224,9 @@ class PCodeVM {
             ip = 0;
             bp = 0;
             sp = 4;
-            dl = 0;
-            sl = 0;
+            dl = 1;
+            sl = 2;
+            ra = 3;
             stack.reserve(MAX_STACK);
             codePage.reserve(MAX_STACK);
             should_trace = trace;
@@ -256,6 +263,9 @@ class PCodeVM {
                     } break;
                     case LDP: {
                         loadParam();
+                    } break;
+                    case LDF: {
+                        loadField();
                     } break;
                     case LDI: {
                         indirectLoad();
@@ -305,30 +315,33 @@ class PCodeVM {
                         binaryOperator();
                         break;
                 }
-                if (should_trace)
+                if (should_trace && current().instruction != HALT)
                     printStack();
             }
         }
         void printStack() {
             int arn = 0;
-            cout<<"[---------------------------------------------------]"<<endl;
+           /* cout<<"[---------------------------------------------------]"<<endl;
             cout<<"Globals: ";
             for (int i = MIN_GLOBAL_ADDR; i > MIN_GLOBAL_ADDR - 20 && stack[i].type != AS_NIL; i--) 
                 cout<<"["<<i<<": "<<*toString(stack[i])<<"] ";
-            cout<<endl;
+            cout<<endl;*/
             cout<<"------------------------"<<endl;
-            cout<<"Stack: BP: "<<bp<<", SP: "<<sp<<" "<<endl;
             cout<<"{ ";
-            for (int i = 0; i <= sp; i++) {
-                if (i == bp) cout<<"(BP: ";
-                if (i == sp) cout<<"SP: ";
-                if (sl != 0) {
-                    if (i == sl) cout<<"SL: ";
-                    if (i == dl) cout<<"DL: ";
-                    if (i == ra) cout<<"RA: ";
-                }
-                cout<<"["<<i<<": "<<*toString(stack[i])<<"] ";
-                if (i == sp) cout<<") ";
+            cout<<" BP: "<<bp<<", SP: "<<sp<<endl;
+            cout<<"      Stack:         \t\t\tGlobals: "<<endl;
+            for (int i = 0, j = 5000; i <= sp; i++, j--) {
+                if (i == bp) cout<<" BP: ";
+                if (i == sp) cout<<" SP: ";
+                if (i == sl) cout<<" SL: ";
+                if (i == dl && dl != bp) cout<<" DL: ";
+                if (i == ra && i != sp) cout<<" RA: ";
+                if (i != bp && i != sp && i != sl && i != dl && i != ra) 
+                    cout<<"     ";
+                cout<<"["<<setw(4)<<i<<": "<<setw(15)<<*toString(stack[i])<<"] ";
+                cout<<"\t\t";
+                cout<<"["<<setw(4)<<j<<": "<<setw(15)<<*toString(stack[j])<<"] "<<endl;
+
             }
             cout<<"}"<<endl;
             cout<<"[---------------------------------------------------]"<<endl;
@@ -339,5 +352,3 @@ class PCodeVM {
 
 //let x := 1; func count() { if (x <= 5) { println x; x := x + 1; count(); } else { println "fin."; } }; count();
 // func fact(let k) { if (k < 2) { return 1; } else { return k*fact(k-1); } }; let k := 1; while (k <= 8) { println fact(k); k := k + 1; }
-
-// func fib(let k) { if (k < 2) { return 1; } else { return fib(k-1) + fib(k-2); } }; let fibs[15]; let i := 1; while (i < 15) { fibs[i] := fib(i); println fibs[i]; i := i + 1; }

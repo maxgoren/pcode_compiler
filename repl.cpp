@@ -4,24 +4,49 @@
 #include "pmachine.hpp"
 using namespace std;
 
-void repl() {
+class Compiler {
+    private:
+        ASTBuilder astBuilder;
+        PCodeGenerator codeGenerator;
+    public:
+        Compiler(bool trace = false) {
+            astBuilder.setTrace(trace);
+            codeGenerator.setTrace(trace);
+        }
+        vector<Instruction> compile(string code) {
+            ASTNode* ast = astBuilder.build(code);
+            return codeGenerator.generate(ast);
+        }
+        vector<Instruction> compileFile(string filename) {
+            ASTNode* ast = astBuilder.buildFromFile(filename);
+            return codeGenerator.generate(ast);
+        }
+        void setTrace(bool trace) {
+            astBuilder.setTrace(trace);
+            codeGenerator.setTrace(trace);
+        }
+};
+
+void repl(bool should_trace) {
     bool running = true;
     string buff;
-    ASTBuilder astBuilder;
-    PCodeGenerator gen;
+    Compiler compiler;
     PCodeVM vm;
     while (running) {
         cout<<"repl> ";
         getline(cin, buff);
         if (buff == ".traceon") {
             vm.setTrace(true);
+            compiler.setTrace(true);
         } else if (buff == ".traceoff") {
             vm.setTrace(false);
+            compiler.setTrace(false);
         } else {
-            auto syntaxTree = astBuilder.build(buff);
-            auto pcode = gen.generate(syntaxTree);
-            for (auto p : pcode) {
-                cout<<p<<endl;
+            auto pcode = compiler.compile(buff);
+            if (should_trace) {
+                for (auto p : pcode) {
+                    cout<<p<<endl;
+                }
             }
             vm.init(pcode);
             vm.execute();
@@ -29,7 +54,20 @@ void repl() {
     }
 }
 
+void runFile(string filename) {
+    Compiler compiler;
+    PCodeVM vm;
+    compiler.setTrace(true);
+    vm.setTrace(true);
+    auto pcode = compiler.compileFile(filename);
+    vm.init(pcode);
+    vm.execute();
+}
+
 
 int main(int argc, char* argv[]) {
-    repl();
+    if (argc < 2)
+        repl(false);
+    runFile(argv[1]);
+    return 0;
 }

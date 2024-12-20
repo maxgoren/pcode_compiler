@@ -8,6 +8,7 @@ using namespace std;
 
 class ASTBuilder {
     private:
+        bool should_trace;
         Lexer lexer;
         Parser parser;
         void printTokens(TokenStream ts) {
@@ -22,16 +23,32 @@ class ASTBuilder {
             traverse(ast);
         }
     public:
-        ASTBuilder() {
-
+        ASTBuilder(bool trace = false) {
+            should_trace = trace;
+        }
+        void setTrace(bool trace) {
+            should_trace = trace;
         }
         ASTNode* build(string str) {
             StringBuffer sb;
             sb.init(str);
             TokenStream ts = lexer.lex(sb);
-            printTokens(ts);
+            if (should_trace)
+                printTokens(ts);
             ASTNode* ast = parser.parse(ts);
-            printAST(ast);
+            if (should_trace)
+                printAST(ast);
+            return ast;
+        }
+        ASTNode* buildFromFile(string filename) {
+            StringBuffer sb;
+            sb.readFromFile(filename);
+            TokenStream ts = lexer.lex(sb);
+            if (should_trace)
+                printTokens(ts);
+            ASTNode* ast = parser.parse(ts);
+            if (should_trace)
+                printAST(ast);
             return ast;
         }
 };

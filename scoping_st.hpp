@@ -90,24 +90,32 @@ STEntry* makeEmptyEntry() {
 
 class ScopingSymbolTable {
     private:
+        bool should_trace;
         Scope* scope;
         int scopeDepth;
         int localAddr;
+        int heapAddr;
+        vector<int> freelist;
         STEntry* get(string name, DefType type) {
-            cout<<"Searching for: "<<name<<" ";
+            if (should_trace) {
+                cout<<"Searching for: "<<name<<" ";
+            }
             Scope* x = scope;
             int idx = hashf(name);
             while (x != nullptr) {
-                 cout<<" . ";
+                if (should_trace)
+                    cout<<" . ";
                 for (STEntry* it = x->table[idx]; it != nullptr; it = it->next) {
                     if (it->name == name) {
-                        cout<<"Found."<<endl;
+                        if (should_trace)
+                            cout<<"Found."<<endl;
                         return it;
                     }
                 }
                 x = x->enclosing;
             }
-            cout<<"Not found."<<endl;
+            if (should_trace)
+                cout<<"Not found."<<endl;
             return makeEmptyEntry();
         }
         void dump(Scope* s, int sd) {
@@ -150,6 +158,11 @@ class ScopingSymbolTable {
             scope->enclosing = nullptr;
             scopeDepth = 0;
             localAddr = 5000;
+            heapAddr = 6999;
+            should_trace = false;
+        }
+        void setTrace(bool trace) {
+            should_trace = trace;
         }
         void insertVar(string name, int size) {
             int idx = hashf(name);
@@ -214,13 +227,15 @@ class ScopingSymbolTable {
             st->enclosing = scope;
             scope = st;
             scopeDepth++;
-            cout<<"Open scope for: "<<name<<endl;
+            if (should_trace)
+                cout<<"Open scope for: "<<name<<endl;
         }
         void closeScope() {
             if (scope->enclosing != nullptr) {
                 scope = scope->enclosing;
                 scopeDepth--;
-                cout<<"Closing scope."<<endl;
+                if (should_trace)
+                    cout<<"Closing scope."<<endl;
             }
         }
         Scope* insertStruct(string name, int size) {
@@ -248,7 +263,8 @@ class ScopingSymbolTable {
             int idx = hashf(fieldname);
             for (STEntry* it = stScope->table[idx]; it != nullptr; it = it->next) {
                 if (it->name == fieldname) {
-                    cout<<"Found."<<endl;
+                    if (should_trace)
+                        cout<<"Found."<<endl;
                     return it->localvar;
                 }
             }
@@ -269,14 +285,26 @@ class ScopingSymbolTable {
             st->enclosing = scope;
             scope = st;
             scopeDepth++;
-            cout<<"Open struct scope for: "<<name<<endl;
+            if (should_trace)
+                cout<<"Open struct scope for: "<<name<<endl;
         }
         void closeStruct() {
             if (scope->enclosing != nullptr) {
                 scope = scope->enclosing;
                 scopeDepth--;
-                cout<<"Closing struct scope."<<endl;
+                if (should_trace)
+                    cout<<"Closing struct scope."<<endl;
             }
+        }
+        int allocStruct(string name) {
+            Scope* st = getStruct(name);
+            if (st == nullptr) {
+                cout<<"Error: no such type: "<<name<<endl;
+                return -1;
+            }
+            int nextAddr = heapAddr--;
+            heapAddr -= st->numEntries;
+            return nextAddr;
         }
         void print() {
             cout<<"Symbol Table: "<<endl;

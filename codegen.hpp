@@ -4,7 +4,6 @@
 #include <vector>
 #include "syntaxtree.hpp"
 #include "vminst.hpp"
-#include "symboltable.hpp"
 #include "scoping_st.hpp"
 using namespace std;
 
@@ -14,6 +13,7 @@ using namespace std;
 
 class PCodeGenerator {
     private:
+        bool should_trace;
         ScopingSymbolTable st;
         string makeLabel() {
             static int labelnum = 0;
@@ -121,6 +121,7 @@ class PCodeGenerator {
         bool hasField(ASTNode* node) {
             return (node->child[0] != nullptr && node->child[0]->nk == EXPR_NODE && node->child[0]->type.expr == FIELD_EXPR);
         }
+        bool isField;
         void genExpr(ASTNode* node, bool isAddr) {
             switch (node->type.expr) {
                 case ID_EXPR: {
@@ -130,16 +131,20 @@ class PCodeGenerator {
                         emit(HALT);
                         return;
                     }
-                    if (isAddr || hasSubscript(node) || hasField(node)) {
+                    if (isField) {
+                        emit(LDF, makeInt(lv->loc));
+                    } else if (isAddr || hasSubscript(node) || hasField(node)) {
                         emit(LDA, makeInt(lv->loc), makeInt(0));
                     } else {
                         emit(genparam ? LDP:LOD, makeInt(lv->loc), makeInt(0));
                     }
                     if (node->child[LEFTCHILD] != nullptr) {
                         if (hasField(node)) {
+                            isField = true;
                             st.openStruct(node);
                             genExpr(node->child[LEFTCHILD], isAddr);
                             st.closeStruct();
+                            isField = false;
                         } else {
                             genExpr(node->child[LEFTCHILD], isAddr);
                         }
@@ -237,10 +242,12 @@ class PCodeGenerator {
                                 if (st.getVar(node->data.strval) == nullptr) {
                                     if (hasSubscript(node)) {
                                         st.insertVar(node->data.strval, atoi(node->child[0]->data.strval.data()));
-                                        cout<<node->data.strval<<" added to symbol table as an array of size "<<atoi(node->child[0]->data.strval.data())<<endl;
+                                        if (should_trace)
+                                            cout<<node->data.strval<<" added to symbol table as an array of size "<<atoi(node->child[0]->data.strval.data())<<endl;
                                     } else {
                                         st.insertVar(node->data.strval);
-                                        cout<<node->data.strval<<" added to symbol table"<<endl;
+                                        if (should_trace)
+                                            cout<<node->data.strval<<" added to symbol table"<<endl;
                                     }
                                 }                                
                             } break;
@@ -251,7 +258,8 @@ class PCodeGenerator {
                                     buildST(node->child[1]);
                                     st.closeStruct();
                                     buildST(node->next);
-                                    cout<<node->data.strval<<" added to symbol table"<<endl;
+                                    if (should_trace)
+                                        cout<<node->data.strval<<" added to symbol table"<<endl;
                                     return;
                                 }
                             } break;
@@ -264,7 +272,8 @@ class PCodeGenerator {
                                     ASTNode* t = node->child[0];
                                     Scope* ts = st.getStruct(node->data.strval);
                                     if (ts != nullptr) {
-                                        cout<<"Getting field "<<t->child[0]->data.strval<<" ";
+                                        if (should_trace)
+                                            cout<<"Getting field "<<t->child[0]->data.strval<<" ";
                                         LocalVar* field = st.getFieldFromStruct(ts, t->child[0]->data.strval);
                                         if (field != nullptr) {
                                             return;
@@ -294,25 +303,36 @@ class PCodeGenerator {
         void init() {
             codepage = vector<Instruction>(1000);
             cPos = 0;
+            isField = false;
         }
     public:
-        PCodeGenerator() {
+        PCodeGenerator(bool trace = false) {
             init();
             genparam = false;
+            isField = false;
+            should_trace = trace;
         }
         void setContext(ScopingSymbolTable& symbolTable) {
             st = symbolTable;
         }
+        void setTrace(bool trace) {
+            should_trace = trace;
+            st.setTrace(trace);
+        }
         vector<Instruction> generate(ASTNode* node) {
             init();
-            cout<<"Building Symbol Table: "<<endl;
+            if (should_trace)
+                cout<<"Building Symbol Table: "<<endl;
             buildST(node);
-            st.print();
-            cout<<"Generating P-Code..."<<endl;
+            if (should_trace )
+                st.print();
+            if (should_trace)
+                cout<<"Generating P-Code..."<<endl;
             genCode(node, false);
             emit(HALT);
             codepage.resize(cPos);
-            cout<<"Done."<<endl;
+            if (should_trace)
+                cout<<"Done."<<endl;
             return codepage;
         }
 };

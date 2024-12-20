@@ -37,7 +37,7 @@ class Parser {
         }
         bool match(Symbol sym) {
             if (sym == ts.get().symbol) {
-                cout<<"Match: "<<symbolStr[sym]<<endl;
+                //cout<<"Match: "<<symbolStr[sym]<<endl;
                 advance();
                 return true;
             }
@@ -99,6 +99,7 @@ class Parser {
                     match(TK_LP);
                     node->child[0] = simpleExpr();
                     match(TK_RP);
+                    if (expect(TK_DO)) match(TK_DO); // <3 algol
                     match(TK_LC);
                     node->child[1] = statementList();
                     match(TK_RC);
@@ -109,6 +110,7 @@ class Parser {
                     match(TK_LP);
                     node->child[0] = simpleExpr();
                     match(TK_RP);
+                    if (expect(TK_THEN)) match(TK_THEN);
                     match(TK_LC);
                     node->child[1] = statementList();
                     match(TK_RC);
@@ -267,6 +269,12 @@ class Parser {
                     match(TK_PRODUCES);
                     node->child[1] = statement();
                 }
+                return node;
+            }
+            if (expect(TK_NEW)) {
+                node = makeExprNode(BLESS_EXPR, lookahead());
+                match(TK_NEW);
+                node->child[0] = simpleExpr();
                 return node;
             }
             return node;
