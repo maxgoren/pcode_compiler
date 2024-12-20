@@ -11,7 +11,7 @@ enum ExprType {
 };
 
 enum StmtType {
-    PRINT_STMT, EXPR_STMT, LET_STMT, WHILE_STMT, IF_STMT, RETURN_STMT, STRUCT_STMT
+    PROGRAM_STMT, PRINT_STMT, EXPR_STMT, LET_STMT, WHILE_STMT, IF_STMT, RETURN_STMT, STRUCT_STMT
 };
 
 string nodeKindStr[] = {
@@ -23,7 +23,7 @@ string exprTypeStr[] = {
 };
 
 string stmtTypeStr[] = {
-    "PRINT_STMT", "EXPR_STMT", "LET_STMT", "WHILE_STMT", "IF_STMT", "RETURN_STMT", "STRUCT_STMT"
+    "PROGRAM_STMT", "PRINT_STMT", "EXPR_STMT", "LET_STMT", "WHILE_STMT", "IF_STMT", "RETURN_STMT", "STRUCT_STMT"
 };
 
 const int MAXCHILD = 3;

@@ -54,6 +54,17 @@ class Parser {
         }
     private:
         ASTNode* program() {
+            ASTNode* program;
+            if (expect(TK_PROGRAM)) {
+                program = makeStmtNode(PROGRAM_STMT, lookahead());
+                match(TK_PROGRAM);
+                match(TK_ID);
+                match(TK_LC);
+                program->child[0] = statementList();
+                match(TK_RC);
+                match(TK_PERIOD);
+                return program;
+            }
             ASTNode* node = statementList();
             return node;
         }

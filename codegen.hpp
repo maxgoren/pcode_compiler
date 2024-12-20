@@ -65,6 +65,9 @@ class PCodeGenerator {
         }
         void genStmt(ASTNode* node, bool isAddr) {
             switch (node->type.stmt) {
+                case PROGRAM_STMT: {
+                    genCode(node->child[0], isAddr);
+                } break;
                 case EXPR_STMT: {
                     genCode(node->child[0], isAddr);
                 } break;
@@ -76,7 +79,7 @@ class PCodeGenerator {
                     LocalVar* lv = st.getVar(node->data.strval);
                     emit(LDA, makeInt(lv->loc), makeInt(lv->depth));
                     genCodeNS(node->child[0],false);
-                    emit(STO);
+                    emit(STN);
                 } break;
                 case IF_STMT: {
                     genIfStmt(node, isAddr);

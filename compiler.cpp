@@ -54,11 +54,11 @@ void repl(bool should_trace) {
     }
 }
 
-void runFile(string filename) {
+void runFile(string filename, bool trace) {
     Compiler compiler;
     PCodeVM vm;
-    compiler.setTrace(true);
-    vm.setTrace(true);
+    compiler.setTrace(trace);
+    vm.setTrace(trace);
     auto pcode = compiler.compileFile(filename);
     vm.init(pcode);
     vm.execute();
@@ -68,6 +68,15 @@ void runFile(string filename) {
 int main(int argc, char* argv[]) {
     if (argc < 2)
         repl(false);
-    runFile(argv[1]);
+    switch (argc) {
+        case 2:
+            runFile(argv[1], false);
+            break;
+        case 3:
+            runFile(argv[2], true);
+        default:
+            break;
+
+    }
     return 0;
 }

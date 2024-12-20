@@ -62,6 +62,7 @@ class Lexer {
             if (id == "return")  return Token(TK_RETURN, "return");
             if (id == "while")   return Token(TK_WHILE, "while");
             if (id == "func")    return Token(TK_AMPER, "func");
+            if (id == "program") return Token(TK_PROGRAM, "program");
             if (id == "procedure") return Token(TK_AMPER, "procedure");
             if (id == "struct")  return Token(TK_STRUCT, "struct");
             if (id == "record")  return Token(TK_STRUCT, "record");
