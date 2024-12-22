@@ -12,15 +12,5 @@ begin
                 return fib(k-1) + fib(k-2); 
             end
     end
-    let x := 5;
-    let arr[15];
-    while (x < 10) do begin
-        arr[x] := fib(x);
-        x := x + 1;
-    end
-    x := 5;
-    while (x < 10) do begin
-        println arr[x];
-        x := x + 1;
-    end
+    println fib(6);
 end.
