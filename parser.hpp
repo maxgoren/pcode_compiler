@@ -139,7 +139,7 @@ class Parser {
                     node->child[0] = simpleExpr();
                     return node;
                 } break;
-                case TK_AMPER:
+                case TK_FUNC:
                 case TK_ID: 
                 case TK_LP:
                 case TK_NUM: {
@@ -257,9 +257,9 @@ class Parser {
                 match(TK_STR);
                 return node;
             }
-            if (expect(TK_AMPER)) {
+            if (expect(TK_FUNC)) {
                 node = makeExprNode(LAMBDA_EXPR, lookahead());
-                match(TK_AMPER);
+                match(TK_FUNC);
                 if (expect(TK_ID)) {
                     node->data = lookahead();
                     match(TK_ID);
@@ -304,12 +304,22 @@ class Parser {
             match(TK_LET);
             ASTNode* m = makeStmtNode(LET_STMT, lookahead());
             ASTNode* c = m;
+            if (expect(TK_REF)) {
+                match(TK_REF);
+                m->type.stmt = REF_STMT;
+                m->data = lookahead();
+            }
             match(TK_ID);
             while (!expect(TK_RP)) {
                 match(TK_COMA);
                 match(TK_LET);
                 c->next = makeStmtNode(LET_STMT, lookahead());
                 c = c->next;
+                if (expect(TK_REF)) {
+                    match(TK_REF);
+                    c->type.stmt = REF_STMT;
+                    c->data = lookahead();
+                }
                 match(TK_ID);
             }
             return m;

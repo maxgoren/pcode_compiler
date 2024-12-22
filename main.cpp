@@ -1,31 +1,7 @@
 #include <iostream>
-#include "astbuilder.hpp"
-#include "codegen.hpp"
+#include "compiler.hpp"
 #include "pmachine.hpp"
 using namespace std;
-
-class Compiler {
-    private:
-        ASTBuilder astBuilder;
-        PCodeGenerator codeGenerator;
-    public:
-        Compiler(bool trace = false) {
-            astBuilder.setTrace(trace);
-            codeGenerator.setTrace(trace);
-        }
-        vector<Instruction> compile(string code) {
-            ASTNode* ast = astBuilder.build(code);
-            return codeGenerator.generate(ast);
-        }
-        vector<Instruction> compileFile(string filename) {
-            ASTNode* ast = astBuilder.buildFromFile(filename);
-            return codeGenerator.generate(ast);
-        }
-        void setTrace(bool trace) {
-            astBuilder.setTrace(trace);
-            codeGenerator.setTrace(trace);
-        }
-};
 
 void repl(bool should_trace) {
     bool running = true;
@@ -38,9 +14,11 @@ void repl(bool should_trace) {
         if (buff == ".traceon") {
             vm.setTrace(true);
             compiler.setTrace(true);
+            should_trace = true;
         } else if (buff == ".traceoff") {
             vm.setTrace(false);
             compiler.setTrace(false);
+            should_trace = false;
         } else {
             auto pcode = compiler.compile(buff);
             if (should_trace) {
@@ -54,7 +32,7 @@ void repl(bool should_trace) {
     }
 }
 
-void runFile(string filename, bool trace) {
+void compileAndRunFromFile(string filename, bool trace) {
     Compiler compiler;
     PCodeVM vm;
     compiler.setTrace(trace);
@@ -70,10 +48,10 @@ int main(int argc, char* argv[]) {
         repl(false);
     switch (argc) {
         case 2:
-            runFile(argv[1], false);
+            compileAndRunFromFile(argv[1], false);
             break;
         case 3:
-            runFile(argv[2], true);
+            compileAndRunFromFile(argv[2], true);
         default:
             break;
 

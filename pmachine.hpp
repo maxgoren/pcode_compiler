@@ -91,6 +91,12 @@ class PCodeVM {
             int addr = calculateAddress(getInteger(current().operand));
             stack[sp] = makeInt(addr);
         }
+        void loadReferenceParam() {
+            sp += 1;
+            int os = getValue(current().operand);
+            int addr = os < 2000 ? getValue(stack[bp+1])+4 + os:os;
+            stack[sp] = makeInt(addr);
+        }
         void loadParam() {
             sp += 1;
             int os = getValue(current().operand);
@@ -149,7 +155,8 @@ class PCodeVM {
             sp -= 2;
         }
         void storeNonDestructive() {
-            int addr = calculateAddress(getValue(stack[sp-1]));
+            int addr = getValue(stack[sp-1]);//calculateAddress(getValue(stack[sp-1]));
+            addr = (addr < 2000) ? getValue(stack[bp+1])+addr:addr;
             stack[addr] = stack[sp];
             stack[sp-1] = stack[sp];
             sp -= 1;
@@ -261,6 +268,9 @@ class PCodeVM {
                     case LDA: {
                         loadAddress();
                     } break;
+                    case LRP: {
+                        loadReferenceParam();
+                    } break;
                     case LDP: {
                         loadParam();
                     } break;
@@ -302,8 +312,10 @@ class PCodeVM {
                         sp--;
                     } break;
                     case INC: {
-                        sp +=1;
-                        stack[sp] = makeInt(0);
+                        for (int i = 0; i < getInteger(current().operand); i++) {
+                            sp += 1;
+                            stack[sp] = makeInt(0);
+                        }
                     } break;
                     case TS: {
                         sp += 1;
@@ -321,14 +333,9 @@ class PCodeVM {
         }
         void printStack() {
             int arn = 0;
-           /* cout<<"[---------------------------------------------------]"<<endl;
-            cout<<"Globals: ";
-            for (int i = MIN_GLOBAL_ADDR; i > MIN_GLOBAL_ADDR - 20 && stack[i].type != AS_NIL; i--) 
-                cout<<"["<<i<<": "<<*toString(stack[i])<<"] ";
-            cout<<endl;*/
-            cout<<"------------------------"<<endl;
-            cout<<"{ ";
-            cout<<" BP: "<<bp<<", SP: "<<sp<<endl;
+            cout<<"[---------------------------------------------------]"<<endl;
+            cout<<"{ \n";
+            cout<<"  BP: "<<bp<<", SP: "<<sp<<endl;
             cout<<"      Stack:         \t\t\tGlobals: "<<endl;
             for (int i = 0, j = 5000; i <= sp; i++, j--) {
                 if (i == bp) cout<<" BP: ";

@@ -75,6 +75,14 @@ class PCodeGenerator {
                     genCode(node->child[0], isAddr);
                     emit(PRINT);
                 } break;
+                case REF_STMT: {
+                    LocalVar* lv = st.getVar(node->data.strval);
+                    emit(LDA, makeInt(lv->loc), makeInt(lv->depth));
+                    genparam = true;
+                    genCodeNS(node->child[0],true);
+                    genparam = false;
+                    emit(STN);
+                }  break;
                 case LET_STMT: {
                     LocalVar* lv = st.getVar(node->data.strval);
                     emit(LDA, makeInt(lv->loc), makeInt(lv->depth));
@@ -136,10 +144,14 @@ class PCodeGenerator {
                     }
                     if (isField) {
                         emit(LDF, makeInt(lv->loc));
-                    } else if (isAddr || hasSubscript(node) || hasField(node)) {
+                    } else if ((isAddr && !genparam) || hasSubscript(node) || hasField(node)) {
                         emit(LDA, makeInt(lv->loc), makeInt(0));
                     } else {
-                        emit(genparam ? LDP:LOD, makeInt(lv->loc), makeInt(0));
+                        if (genparam) {
+                            emit(isAddr ? LRP:LDP, makeInt(lv->loc), makeInt(0));
+                        } else {
+                            emit(LOD, makeInt(lv->loc), makeInt(0));
+                        }
                     }
                     if (node->child[LEFTCHILD] != nullptr) {
                         if (hasField(node)) {
@@ -180,9 +192,6 @@ class PCodeGenerator {
                     emit(LDC, makeString(node->data.strval));
                 } break;
                 case ASSIGN_EXPR: {
-                    ASTNode* idPart = node->child[0];
-                    LocalVar* lv = st.getVar(idPart->data.strval);
-                    int offset = 0;
                     genExpr(node->child[LEFTCHILD], true);
                     genExpr(node->child[RIGHTCHILD], false);
                     emit(STO);
@@ -202,11 +211,14 @@ class PCodeGenerator {
                     emit(MST);
                     ASTNode* t = node->child[1];
                     genparam = true;
+                    int sloc = 0;
                     while (t != nullptr) {
                         genCodeNS(t, isAddr);
                         t = t->next;
+                        sloc++;
                     }
                     genparam = false;
+                    emit(INC, makeInt(st.scopeSize(node->data.strval)-sloc));
                     emit(CAL, makeString(node->data.strval));
                 } break;
                 default:
@@ -241,6 +253,7 @@ class PCodeGenerator {
                 switch (node->nk) {
                     case STMT_NODE: 
                         switch (node->type.stmt) {
+                            case REF_STMT:
                             case LET_STMT: {
                                 if (st.getVar(node->data.strval) == nullptr) {
                                     if (hasSubscript(node)) {

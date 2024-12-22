@@ -161,6 +161,10 @@ class ScopingSymbolTable {
             heapAddr = 6999;
             should_trace = false;
         }
+        int scopeSize(string name) {
+            Scope* sc = getProc(name);
+            return sc == nullptr ? 0:sc->numEntries;
+        }
         void setTrace(bool trace) {
             should_trace = trace;
         }

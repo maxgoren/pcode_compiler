@@ -5,7 +5,7 @@
 using namespace std;
 
 enum Inst {
-    LDC, LDA, LOD, 
+    LDC, LDA, LOD, LRP,
     LDP, LDI, LDF, IXA,
     STO, STN, STP,
     LAB, MST, ENT, CAL, 
@@ -18,7 +18,7 @@ enum Inst {
 };
 
 string instStr[] = {
-    "LDC", "LDA", "LOD", 
+    "LDC", "LDA", "LOD", "LRP",
     "LDP", "LDI", "LDF", "IXA",
     "STO", "STN", "STP",
     "LAB",

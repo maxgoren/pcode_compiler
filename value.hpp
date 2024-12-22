@@ -120,6 +120,16 @@ Value concatStrings(Value lhs, Value rhs) {
     return makeString(str);
 }
 
+Value repeatString(Value strVal, int numRepeat) {
+    string tmp;
+    for (int i = 0; i < numRepeat; i++) {
+        for (int j = 0; j < strVal.strval->len; j++) {
+            tmp.push_back(strVal.strval->str[j]);
+        }
+    }
+    return makeString(tmp);
+}
+
 bool compareStrings(String* lhs, String* rhs) {
     int i = 0, j = 0;
     while (i < lhs->len && j < rhs->len) {
@@ -213,6 +223,8 @@ bool isZero(Value val) {
 }
 
 Value add(Value lhs, Value rhs) {
+    if (lhs.type == AS_STRING || rhs.type == AS_STRING)
+        return concatStrings(makeString(toString(lhs)), makeString(toString(rhs)));
     if (lhs.type == AS_INT || lhs.type == AS_REAL) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeReal(a + b);
@@ -229,6 +241,13 @@ Value sub(Value lhs, Value rhs) {
 }
 
 Value mul(Value lhs, Value rhs) {
+    if (lhs.type == AS_STRING || rhs.type == AS_STRING) {
+        if (lhs.type == AS_STRING) {
+            return repeatString(lhs, getPrimitive(rhs));
+        } else {
+            return repeatString(rhs, getPrimitive(lhs));
+        }
+    }
     if (lhs.type == AS_INT || lhs.type == AS_REAL) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeReal(a * b);

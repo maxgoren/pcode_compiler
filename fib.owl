@@ -1,7 +1,8 @@
+{* DALGOL24 the dynamically typed ALGOL! *}
 program fibonacci
 begin
-   procedure fib(let k)
-   begin
+    procedure fib(let k)
+    begin
         if (k < 2) then 
             begin 
                 return 1; 
@@ -11,15 +12,15 @@ begin
                 return fib(k-1) + fib(k-2); 
             end
     end
-    let x := 1;
+    let x := 5;
     let arr[15];
-    while (x < 15) do begin
+    while (x < 10) do begin
         arr[x] := fib(x);
         x := x + 1;
     end
-    x := 1;
-    while (x < 15) do begin
+    x := 5;
+    while (x < 10) do begin
         println arr[x];
         x := x + 1;
-    end    
+    end
 end.

@@ -15,6 +15,26 @@ class Lexer {
                 } else break;
             }
         }
+        void skipComments(StringBuffer& sb) {
+            if (sb.get() == '{') {
+                sb.advance();
+                if (sb.get() == '*') {
+                    sb.advance();
+                    while (!sb.done()) {
+                        if (sb.get() == '*') {
+                            sb.advance();
+                            if (sb.get() == '}') {
+                                sb.advance();
+                                skipWhiteSpace(sb);
+                                return;
+                            }
+                        }
+                        sb.advance();
+                    }
+                }
+                sb.rewind();
+            }
+        }
         Token extractNumber(StringBuffer& sb) {
             string num;
             while (!sb.done()) {
@@ -61,14 +81,15 @@ class Lexer {
             if (id == "println") return Token(TK_PRINT, "println");
             if (id == "return")  return Token(TK_RETURN, "return");
             if (id == "while")   return Token(TK_WHILE, "while");
-            if (id == "func")    return Token(TK_AMPER, "func");
+            if (id == "func")    return Token(TK_FUNC, "func");
             if (id == "program") return Token(TK_PROGRAM, "program");
-            if (id == "procedure") return Token(TK_AMPER, "procedure");
+            if (id == "procedure") return Token(TK_FUNC, "procedure");
             if (id == "struct")  return Token(TK_STRUCT, "struct");
             if (id == "record")  return Token(TK_STRUCT, "record");
             if (id == "begin")   return Token(TK_LC, "begin");
             if (id == "end")     return Token(TK_RC, "end");
             if (id == "new")     return Token(TK_NEW, "new");
+            if (id == "ref")     return Token(TK_REF, "ref");
             return Token(TK_ID, id);
         }
         Token checkSpecials(StringBuffer& sb) {
@@ -82,7 +103,7 @@ class Lexer {
                 case '}': return Token(TK_RC, "}");
                 case '[': return Token(TK_LB, "[");
                 case ']': return Token(TK_RB, "]");
-                case '&': return Token(TK_AMPER, "&");
+                case '&': return Token(TK_FUNC, "&");
                 case '.': return Token(TK_PERIOD, ".");
                 case ',': return Token(TK_COMA, ",");
                 case ';': return Token(TK_SEMI, ";");
@@ -144,6 +165,7 @@ class Lexer {
             vector<Token> tokens;
             while (!sb.done()) {
                 skipWhiteSpace(sb);
+                skipComments(sb);
                 if (isdigit(sb.get())) {
                     tokens.push_back(extractNumber(sb));
                 } else if (isalpha(sb.get())) {
