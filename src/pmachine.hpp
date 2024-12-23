@@ -145,7 +145,12 @@ class PCodeVM {
             stack[sp] = makeInt(ixAddr);
         }
         void storeDestructive() {
-            int addr = calculateAddress(getValue(stack[sp-1]));
+            int addr = getValue(stack[sp-1]);//calculateAddress(getValue(stack[sp-1]));
+            //addr = (addr < 2000) ? getValue(stack[bp+1])+addr:addr;
+            if (should_trace) {
+                cout<<"Calculated bn: "<<getValue(stack[sp-1])<<endl;
+                cout<<"Calculated ad: "<<addr<<endl;
+            }
             stack[addr] = stack[sp];
             sp -= 2;
         }
@@ -156,7 +161,11 @@ class PCodeVM {
         }
         void storeNonDestructive() {
             int addr = getValue(stack[sp-1]);//calculateAddress(getValue(stack[sp-1]));
-            addr = (addr < 2000) ? getValue(stack[bp+1])+addr:addr;
+            //addr = (addr < 2000) ? getValue(stack[bp+1])+addr:addr;
+            if (should_trace) {
+                cout<<"Calculated bn: "<<getValue(stack[sp-1])<<endl;
+                cout<<"Calculated ad: "<<addr<<endl;
+            }
             stack[addr] = stack[sp];
             stack[sp-1] = stack[sp];
             sp -= 1;

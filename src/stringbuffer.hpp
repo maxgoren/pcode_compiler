@@ -74,7 +74,7 @@ private:
             while (ifile.good()) {
                 getline(ifile, buff);
                 lines.push_back(buff);
-                cout<<lines.size()<<": "<<buff<<endl;
+                //cout<<lines.size()<<": "<<buff<<endl;
             }
             ifile.close();
             spos = 0; 

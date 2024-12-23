@@ -12,5 +12,5 @@ begin
                 return fib(k-1) + fib(k-2); 
             end
     end
-    println fib(6);
+    println fib(40);
 end.
