@@ -255,17 +255,15 @@ class PCodeGenerator {
                         switch (node->type.stmt) {
                             case REF_STMT:
                             case LET_STMT: {
-                                if (st.getVar(node->data.strval) == nullptr) {
-                                    if (hasSubscript(node)) {
-                                        st.insertVar(node->data.strval, atoi(node->child[0]->data.strval.data()));
-                                        if (should_trace)
-                                            cout<<node->data.strval<<" added to symbol table as an array of size "<<atoi(node->child[0]->data.strval.data())<<endl;
-                                    } else {
-                                        st.insertVar(node->data.strval);
-                                        if (should_trace)
-                                            cout<<node->data.strval<<" added to symbol table"<<endl;
-                                    }
-                                }                                
+                                if (hasSubscript(node)) {
+                                    st.insertVar(node->data.strval, atoi(node->child[0]->data.strval.data()));
+                                    if (should_trace)
+                                        cout<<node->data.strval<<" added to symbol table as an array of size "<<atoi(node->child[0]->data.strval.data())<<endl;
+                                } else {
+                                    st.insertVar(node->data.strval);
+                                    if (should_trace)
+                                        cout<<node->data.strval<<" added to symbol table"<<endl;
+                                }
                             } break;
                             case STRUCT_STMT: {
                                 if (st.getVar(node->data.strval) == nullptr) {

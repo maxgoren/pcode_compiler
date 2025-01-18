@@ -1,0 +1,13 @@
+program resolve
+begin
+    var a := "global";
+    procedure show() begin
+        println a;
+    end
+    procedure ex() begin
+        show();
+        var a := "inner";
+        show();
+    end
+    ex();
+end.

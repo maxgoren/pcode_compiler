@@ -201,16 +201,21 @@ class Parser {
             return node;
         }
         ASTNode* factor() {
+            ASTNode* node;
+            if (expect(TK_SUB)) {
+                node = makeExprNode(UNOP_EXPR, lookahead());
+                match(TK_SUB);
+                node->child[0] = factor();
+                return node;
+            }
+            node = val();
+            return node;
+        }
+        ASTNode* val() {
             ASTNode* node = nullptr;
             if (expect(TK_NUM)) {
                 node = makeExprNode(CONST_EXPR, lookahead());
                 match(TK_NUM);
-                return node;
-            }
-            if (expect(TK_SUB)) {
-                node = makeExprNode(UNOP_EXPR, lookahead());
-                match(TK_SUB);
-                node->child[0] = simpleExpr();
                 return node;
             }
             if (expect(TK_LP)) {

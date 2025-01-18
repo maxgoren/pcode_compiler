@@ -10,7 +10,9 @@ enum Symbol {
     TK_PERIOD, TK_COMA, TK_SEMI, TK_COLON,
     TK_ASSIGN, TK_QUOTE, TK_PROGRAM, TK_FUNC, TK_PRODUCES, TK_STRUCT, TK_NEW, TK_FREE,
     TK_LET, TK_VAR, TK_REF, TK_DO, TK_THEN, TK_PRINT, TK_WHILE, TK_RETURN, TK_IF, TK_ELSE,
-    TK_EOI, TK_ERR
+    TK_EOI, TK_ERR,
+
+    NT_PROGRAM, NT_STMTLIST, NT_STMT, NT_SIMPEXPR, NT_EXPR, NT_TERM, NT_FACTOR
 };
 
 string symbolStr[] = {
@@ -30,7 +32,7 @@ struct Token {
 };
 
 void printToken(Token tk) {
-    cout<<"<["<<symbolStr[tk.symbol]<<", "<<tk.strval<<"]>"<<endl;
+    cout<<"["<<symbolStr[tk.symbol]<<", "<<tk.strval<<"]"<<endl;
 }
 
 
