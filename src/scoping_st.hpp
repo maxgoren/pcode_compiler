@@ -168,11 +168,11 @@ class ScopingSymbolTable {
         void setTrace(bool trace) {
             should_trace = trace;
         }
-        void insertVar(string name, int size) {
+        bool insertVar(string name, int size) {
             int idx = hashf(name);
             for (STEntry* it = scope->table[idx]; it != nullptr; it = it->next) {
                 if (it->name == name)
-                    return;
+                    return false;
             }
             int addr = 0;
             if (scopeIsGlobal()) {
@@ -193,9 +193,10 @@ class ScopingSymbolTable {
             }
             nent->next = scope->table[idx]; 
             scope->table[idx] = nent;
+            return true;
         }
-        void insertVar(string name) {
-            insertVar(name, 1);
+        bool insertVar(string name) {
+            return insertVar(name, 1);
         }
         LocalVar* getVar(string name) {
             STEntry* ent = get(name, VARDEF);

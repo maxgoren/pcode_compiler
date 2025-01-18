@@ -5,9 +5,11 @@ begin
         println a;
     end
     procedure ex() begin
+        let a := "inner";
         show();
-        var a := "inner";
+        println a;
         show();
     end
     ex();
+    println a;
 end.

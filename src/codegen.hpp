@@ -218,7 +218,6 @@ class PCodeGenerator {
                         sloc++;
                     }
                     genparam = false;
-                    emit(INC, makeInt(st.scopeSize(node->data.strval)-sloc));
                     emit(CAL, makeString(node->data.strval));
                 } break;
                 default:
