@@ -11,7 +11,7 @@ enum Inst {
     LAB, MST, ENT, CAL, 
     RET, JMP, JPC,
     NEG, ADD, SUB,
-    MUL, DIV, MOD,
+    MUL, DIV, MOD, NOT,
     EQU, NEQ, LTE, GTE,
     LT, GT, TS, INC, DEC, 
     PRINT, HALT
@@ -25,7 +25,7 @@ string instStr[] = {
     "MST", "ENT", "CAL", 
     "RET", "JMP", "JPC",
     "NEG", "ADD", "SUB",
-    "MUL", "DIV", "MOD",
+    "MUL", "DIV", "MOD", "NOT",
     "EQU","NEQ", "LTE", 
     "GTE", "LT", "GT", 
     "TS", "INC", "DEC", 

@@ -316,6 +316,9 @@ class PCodeVM {
                     case NEG: {
                         stack[sp] = neg(stack[sp]);
                     } break;
+                    case NOT: {
+                        stack[sp] = Not(stack[sp]);
+                    } break;
                     case PRINT: {
                         cout<<"\t\t\t\t\t"<<*toString(stack[sp])<<endl;
                         sp--;
@@ -336,8 +339,8 @@ class PCodeVM {
                         binaryOperator();
                         break;
                 }
-                if (should_trace && current().instruction != HALT)
-                    printStack();
+                //if (should_trace && current().instruction != HALT)
+                //    printStack();
             }
         }
         void printStack() {

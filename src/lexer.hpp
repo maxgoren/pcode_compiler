@@ -16,6 +16,10 @@ class Lexer {
             }
         }
         void skipComments(StringBuffer& sb) {
+            if (sb.get() == '#') {
+                sb.nextLine();
+                return;
+            }
             if (sb.get() == '{') {
                 sb.advance();
                 if (sb.get() == '*') {
@@ -81,13 +85,12 @@ class Lexer {
             if (id == "println") return Token(TK_PRINT, "println");
             if (id == "return")  return Token(TK_RETURN, "return");
             if (id == "while")   return Token(TK_WHILE, "while");
-            if (id == "func")    return Token(TK_FUNC, "func");
             if (id == "program") return Token(TK_PROGRAM, "program");
             if (id == "procedure") return Token(TK_FUNC, "procedure");
             if (id == "struct")  return Token(TK_STRUCT, "struct");
             if (id == "record")  return Token(TK_STRUCT, "record");
-            if (id == "begin")   return Token(TK_LC, "begin");
-            if (id == "end")     return Token(TK_RC, "end");
+            if (id == "begin")   return Token(TK_BEGIN, "begin");
+            if (id == "end")     return Token(TK_END, "end");
             if (id == "new")     return Token(TK_NEW, "new");
             if (id == "ref")     return Token(TK_REF, "ref");
             return Token(TK_ID, id);
@@ -99,14 +102,13 @@ class Lexer {
                 case '/': return Token(TK_DIV, "/");
                 case '(': return Token(TK_LP, "(");
                 case ')': return Token(TK_RP, ")");
-                case '{': return Token(TK_LC, "{");
-                case '}': return Token(TK_RC, "}");
                 case '[': return Token(TK_LB, "[");
                 case ']': return Token(TK_RB, "]");
                 case '&': return Token(TK_FUNC, "&");
                 case '.': return Token(TK_PERIOD, ".");
                 case ',': return Token(TK_COMA, ",");
                 case ';': return Token(TK_SEMI, ";");
+                case '!': return Token(TK_NOT, "!");
                 default: break;
             }
             if (sb.get() == '-') {
@@ -175,6 +177,12 @@ class Lexer {
                 } else {
                     tokens.push_back(checkSpecials(sb));
                     sb.advance();
+                }
+                if (tokens.back().symbol == TK_ERR) {
+                    sb.rewind();
+                    cout<<"Error on line: "<<sb.lineNo()<<", unknown token: "<<sb.get()<<endl;
+                    tokens.clear();
+                    break;
                 }
             }
             tokens.push_back(Token(TK_EOI, "<fin.>"));

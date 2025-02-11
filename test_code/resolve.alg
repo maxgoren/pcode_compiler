@@ -1,15 +1,16 @@
 program resolve
 begin
     var a := "global";
+    var b := "yurt";
     procedure show() begin
-        println a;
+        println a+b;
     end
     procedure ex() begin
-        let a := "inner";
         show();
-        println a;
+        let a := "inner";
+        let b := "bloop";
         show();
     end
     ex();
-    println a;
+    println a+b;
 end.

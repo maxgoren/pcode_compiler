@@ -38,6 +38,9 @@ void compileAndRunFromFile(string filename, bool trace) {
     compiler.setTrace(trace);
     vm.setTrace(trace);
     auto pcode = compiler.compileFile(filename);
+    for (auto p : pcode) {
+        cout<<p<<endl;
+    }
     vm.init(pcode);
     vm.execute();
 }

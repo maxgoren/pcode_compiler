@@ -5,9 +5,8 @@
 #include "syntaxtree.hpp"
 #include "vminst.hpp"
 #include "scoping_st.hpp"
+#include <unordered_map>
 using namespace std;
-
-
 
 
 
@@ -17,8 +16,7 @@ class PCodeGenerator {
         ScopingSymbolTable st;
         string makeLabel() {
             static int labelnum = 0;
-            labelnum++;
-            return "L" + to_string(labelnum);
+            return "L" + to_string(labelnum++);
         }
         vector<Instruction> codepage;
         bool genparam;
@@ -97,7 +95,15 @@ class PCodeGenerator {
                 } break;
                 case RETURN_STMT: {
                     genCode(node->child[0], isAddr);
-                }
+                } break;
+                case BLOCK_STMT: {
+                    st.openScope(node->data.strval);
+                    emit(MST);
+                    emit(ENT);
+                    genCode(node->child[0], false);
+                    emit(RET);
+                    st.closeScope();
+                } break;
                 default: break;
             }
         }
@@ -166,7 +172,7 @@ class PCodeGenerator {
                     }
                 } break;
                 case FIELD_EXPR: {
-                    genCodeNS(node->child[LEFTCHILD], true);
+                    genCodeNS(node->child[LEFTCHILD], false);
                     emit(IXA, makeInt(1), makeInt(0));
                     if (!isAddr) emit(LDI, makeInt(0));
                 } break;
@@ -183,7 +189,11 @@ class PCodeGenerator {
                 } break;
                 case UNOP_EXPR: {
                     genCode(node->child[0], isAddr);
-                    emit(NEG);
+                    switch (node->data.symbol) {
+                        case TK_SUB: emit(NEG); break;
+                        case TK_NOT: emit(NOT); break;
+                        default: break;
+                    }
                 } break;
                 case RELOP_EXPR: {
                     genRelOp(node, isAddr);
@@ -220,6 +230,10 @@ class PCodeGenerator {
                     genparam = false;
                     emit(CAL, makeString(node->data.strval));
                 } break;
+                case BLESS_EXPR: {
+                    int saddr = st.allocStruct(node->child[LEFTCHILD]->data.strval);
+                    emit(LDA, makeInt(saddr));
+                } break;
                 default:
                     break;
             }
@@ -247,6 +261,11 @@ class PCodeGenerator {
                 genCode(node->next, isAddr);
             }
         }
+        string makeScopeLabel() {
+            static int labelnum = 0;
+            labelnum++;
+            return "blockscope" + to_string(labelnum);
+        } 
         void buildST(ASTNode* node) {
             if (node != nullptr) {
                 switch (node->nk) {
@@ -260,6 +279,9 @@ class PCodeGenerator {
                                         cout<<node->data.strval<<" added to symbol table as an array of size "<<atoi(node->child[0]->data.strval.data())<<endl;
                                 } else {
                                     st.insertVar(node->data.strval);
+                                    if (node->child[0] != nullptr && node->child[0]->type.expr == BLESS_EXPR) {
+                                        st.addInstance(node->data.strval, node->child[0]->child[0]->data.strval);
+                                    }
                                     if (should_trace)
                                         cout<<node->data.strval<<" added to symbol table"<<endl;
                                 }
@@ -276,6 +298,12 @@ class PCodeGenerator {
                                     return;
                                 }
                             } break;
+                            case BLOCK_STMT: {
+                                node->data.strval = makeScopeLabel();
+                                st.openScope(node->data.strval);
+                                buildST(node->child[0]);
+                                st.closeScope();
+                            } break;
                         };
                         break;
                     case EXPR_NODE: 
@@ -283,7 +311,7 @@ class PCodeGenerator {
                             case ID_EXPR: {
                                 if (hasField(node)) {
                                     ASTNode* t = node->child[0];
-                                    Scope* ts = st.getStruct(node->data.strval);
+                                    Scope* ts = st.getStruct(st.getType(node->data.strval));
                                     if (ts != nullptr) {
                                         if (should_trace)
                                             cout<<"Getting field "<<t->child[0]->data.strval<<" ";
@@ -305,6 +333,7 @@ class PCodeGenerator {
                                 buildST(node->next);
                                 return;
                             } break;
+
                         } break;
                     default: break;
                 }
@@ -337,10 +366,10 @@ class PCodeGenerator {
             if (should_trace)
                 cout<<"Building Symbol Table: "<<endl;
             buildST(node);
-            if (should_trace )
+            if (should_trace ) {
                 st.print();
-            if (should_trace)
                 cout<<"Generating P-Code..."<<endl;
+            }
             genCode(node, false);
             emit(HALT);
             codepage.resize(cPos);

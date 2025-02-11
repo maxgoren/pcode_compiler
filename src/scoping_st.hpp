@@ -1,6 +1,7 @@
 #ifndef scoping_st_hpp
 #define scoping_st_hpp
 #include <iostream>
+#include <unordered_map>
 #include "syntaxtree.hpp"
 using namespace std;
 
@@ -275,6 +276,14 @@ class ScopingSymbolTable {
             }
             return nullptr;
         }
+        string getType(string name) {
+            return instanceTypes[name];
+        }
+        void addInstance(string instanceName, string typeName) {
+            instanceTypes[instanceName] = typeName;
+            cout<<instanceName<<" is an instance of "<<typeName<<endl;
+        }
+        unordered_map<string, string> instanceTypes;
         void openStruct(ASTNode* node) {
             string name = node->data.strval;
             int size = 1;
@@ -283,7 +292,7 @@ class ScopingSymbolTable {
                 size++;
                 t = t->next;
             }
-            Scope* st = getStruct(name);
+            Scope* st = getStruct(getType(name));
             if (st == nullptr) {
                 st = insertStruct(name, size);
             }

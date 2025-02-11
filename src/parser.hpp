@@ -59,9 +59,9 @@ class Parser {
                 program = makeStmtNode(PROGRAM_STMT, lookahead());
                 match(TK_PROGRAM);
                 match(TK_ID);
-                match(TK_LC);
+                match(TK_BEGIN);
                 program->child[0] = statementList();
-                match(TK_RC);
+                match(TK_END);
                 match(TK_PERIOD);
                 return program;
             }
@@ -71,7 +71,7 @@ class Parser {
         ASTNode* statementList() {
             ASTNode* node = statement();
             ASTNode* m = node;
-            while (lookahead().symbol != TK_RC && lookahead().symbol != TK_EOI) {
+            while (lookahead().symbol != TK_END && lookahead().symbol != TK_EOI) {
                 if (expect(TK_SEMI))
                     match(TK_SEMI);
                 ASTNode* t = statement();
@@ -95,9 +95,9 @@ class Parser {
                     match(TK_STRUCT);
                     node->data.strval = lookahead().strval;
                     match(TK_ID);
-                    match(TK_LC);
+                    match(TK_BEGIN);
                     node->child[0] = statementList();
-                    match(TK_RC);
+                    match(TK_END);
                 } break;
                 case TK_PRINT: {
                     node = makeStmtNode(PRINT_STMT, lookahead());
@@ -111,9 +111,9 @@ class Parser {
                     node->child[0] = simpleExpr();
                     match(TK_RP);
                     if (expect(TK_DO)) match(TK_DO); // <3 algol
-                    match(TK_LC);
+                    match(TK_BEGIN);
                     node->child[1] = statementList();
-                    match(TK_RC);
+                    match(TK_END);
                 } break;
                 case TK_IF: {
                     node = makeStmtNode(IF_STMT, lookahead());
@@ -122,14 +122,14 @@ class Parser {
                     node->child[0] = simpleExpr();
                     match(TK_RP);
                     if (expect(TK_THEN)) match(TK_THEN);
-                    match(TK_LC);
+                    match(TK_BEGIN);
                     node->child[1] = statementList();
-                    match(TK_RC);
+                    match(TK_END);
                     if (expect(TK_ELSE)) {
                         match(TK_ELSE);
-                        match(TK_LC);
+                        match(TK_BEGIN);
                         node->child[2] = statementList();
-                        match(TK_RC);
+                        match(TK_END);
                     }
                     return node;
                 }
@@ -137,6 +137,10 @@ class Parser {
                     node = makeStmtNode(RETURN_STMT, lookahead());
                     match(TK_RETURN);
                     node->child[0] = simpleExpr();
+                    return node;
+                } break;
+                case TK_BEGIN: {
+                    node = makeBlock();
                     return node;
                 } break;
                 case TK_FUNC:
@@ -149,6 +153,13 @@ class Parser {
                 } break;
                 default: break;
             }
+            return node;
+        }
+        ASTNode* makeBlock() {
+            ASTNode* node = makeStmtNode(BLOCK_STMT, lookahead());
+            match(TK_BEGIN);
+            node->child[0] = statementList();
+            match(TK_END);
             return node;
         }
         ASTNode* letStatement() {
@@ -168,6 +179,17 @@ class Parser {
             return node;
         }
         ASTNode* simpleExpr() {
+            ASTNode* node = relExpr();
+            if (expect(TK_ASSIGN)) {
+                ASTNode* t = makeExprNode(ASSIGN_EXPR, lookahead());
+                match(TK_ASSIGN);
+                t->child[0] = node;
+                node = t;
+                node->child[1] = relExpr();
+            }
+            return node;
+        }
+        ASTNode* relExpr() {
             ASTNode* node = expression();
             while (isRelOp(lookahead().symbol)) {
                 ASTNode* t = makeExprNode(RELOP_EXPR, lookahead());
@@ -208,7 +230,43 @@ class Parser {
                 node->child[0] = factor();
                 return node;
             }
-            node = val();
+            if (expect(TK_NOT)) {
+                node = makeExprNode(UNOP_EXPR, lookahead());
+                match(TK_NOT);
+                node->child[0] = factor();
+                return node;
+            }
+            node = primary();
+            return node;
+        }
+        ASTNode* primary() {
+            ASTNode* node = val();
+            if (expect(TK_LB)) {
+                while (expect(TK_LB)) {
+                    ASTNode* t = makeExprNode(SUBSCRIPT_EXPR, lookahead());
+                    match(TK_LB);
+                    t->child[0] = simpleExpr();
+                    match(TK_RB);
+                    node->child[0] = t;
+                }
+            } else if (expect(TK_PERIOD)) {
+                while (expect(TK_PERIOD)) {
+                    ASTNode* t = makeExprNode(FIELD_EXPR, lookahead());
+                    match(TK_PERIOD);
+                    t->child[0] = makeExprNode(ID_EXPR, lookahead());
+                    match(TK_ID);
+                    node->child[0] = t;
+                }
+            }
+            if (expect(TK_LP)) {
+                ASTNode* t = makeExprNode(FUNC_EXPR, lookahead());
+                match(TK_LP);
+                t->data = node->data;
+                node = t;
+                if (!expect(TK_RP)) 
+                    node->child[1] = argsList();
+                match(TK_RP);
+            }
             return node;
         }
         ASTNode* val() {
@@ -218,48 +276,20 @@ class Parser {
                 match(TK_NUM);
                 return node;
             }
-            if (expect(TK_LP)) {
-                match(TK_LP);
-                node = simpleExpr();
-                match(TK_RP);
-                return node;
-            }
             if (expect(TK_ID)) {
                 node = makeExprNode(ID_EXPR, lookahead());
                 match(TK_ID);
-                if (expect(TK_LB)) {
-                    ASTNode* t = makeExprNode(SUBSCRIPT_EXPR, lookahead());
-                    match(TK_LB);
-                    t->child[0] = simpleExpr();
-                    match(TK_RB);
-                    node->child[0] = t;
-                } else if (expect(TK_PERIOD)) {
-                    ASTNode* t = makeExprNode(FIELD_EXPR, lookahead());
-                    match(TK_PERIOD);
-                    t->child[0] = makeExprNode(ID_EXPR, lookahead());
-                    match(TK_ID);
-                    node->child[0] = t;
-                }
-                if (expect(TK_ASSIGN)) {
-                    ASTNode* t = makeExprNode(ASSIGN_EXPR, lookahead());
-                    match(TK_ASSIGN);
-                    t->child[0] = node;
-                    node = t;
-                    node->child[1] = simpleExpr();
-                } else if (expect(TK_LP)) {
-                    ASTNode* t = makeExprNode(FUNC_EXPR, lookahead());
-                    match(TK_LP);
-                    t->data = node->data;
-                    node = t;
-                    if (!expect(TK_RP)) 
-                        node->child[1] = argsList();
-                    match(TK_RP);
-                }
                 return node;
             }
             if (expect(TK_STR)) {
                 node = makeExprNode(STR_EXPR, lookahead());
                 match(TK_STR);
+                return node;
+            }
+            if (expect(TK_LP)) {
+                match(TK_LP);
+                node = simpleExpr();
+                match(TK_RP);
                 return node;
             }
             if (expect(TK_FUNC)) {
@@ -276,10 +306,10 @@ class Parser {
                 } else {
                     match(TK_RP);
                 }
-                if (expect(TK_LC)) {
-                    match(TK_LC);
+                if (expect(TK_BEGIN)) {
+                    match(TK_BEGIN);
                     node->child[1] = statementList();
-                    match(TK_RC);
+                    match(TK_END);
 
                 } else if (expect(TK_PRODUCES)) {
                     match(TK_PRODUCES);

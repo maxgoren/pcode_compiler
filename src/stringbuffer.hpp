@@ -42,6 +42,11 @@ private:
             }
             return buff[spos];
         }
+        void nextLine() {
+            lpos++;
+            spos = 0;
+            buff = lines[lpos];
+        }
         char advance() {
             spos++;
             if (spos >= buff.length()) {

@@ -1,6 +1,7 @@
 #ifndef value_hpp
 #define value_hpp
 #include <iostream>
+#include <cstring>
 #include "syntaxtree.hpp"
 using namespace std;
 
@@ -16,16 +17,18 @@ struct String {
 String* createString(const char* str, int len) {
     String* ns = new String;
     ns->str = new char[len];
-    for (int i = 0; i < len; i++) {
+    int i;
+    for (i = 0; str[i]; i++) {
         ns->str[i] = str[i];
     }
-    ns->str[len] = '\0';
+    ns->str[i] = '\0';
     ns->len = len;
     return ns;
 }
 
 std::ostream& operator<<(std::ostream& os, String& strObj) {
-    os<<strObj.str;
+    for (int i = 0; i < strObj.len; i++)
+        os<<strObj.str[i];
     return os;
 }
 
@@ -316,7 +319,7 @@ Value gt(Value lhs, Value rhs) {
 }
 
 Value neg(Value lhs) {
-    if (lhs.type == AS_INT || lhs.type == AS_REAL) {
+    if (lhs.type == AS_INT || lhs.type == AS_REAL || lhs.type == AS_BOOL) {
         double a = 0;
         switch (lhs.type) {
             case AS_INT: a = lhs.intval; break;
@@ -328,4 +331,14 @@ Value neg(Value lhs) {
     return makeInt(0);
 }
 
+Value Not(Value lhs) {
+    if (lhs.type == AS_BOOL) {
+        bool a;
+        switch (lhs.type) {
+            case AS_BOOL: a = lhs.boolval; break;
+        }
+        return makeBool(!a);
+    }
+    return makeInt(0);
+}
 #endif

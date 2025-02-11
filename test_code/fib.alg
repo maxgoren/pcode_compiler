@@ -1,32 +1,27 @@
-{* DALGOL24 the dynamically typed ALGOL! *}
+#!/usr/local/bin/dalgol -v
 program fibonacci
 begin
-    procedure fib2(curr, prev, count, max) 
+    let cache[100];
+    let cnt := 0;
+    {* dynamic programming version of recursive fibonacci algorithm. uses an array to save previously computed results *}
+    procedure fibo(var n)
     begin
-        if (count == max) 
+        if (n <= 1) then
+        begin
+            return 1;
+        end
+            else
+        begin
+            if (cache[n] == 0) then
             begin
-                return curr;
-            end 
-        else
-            begin
-                return fib2(curr+prev, curr, count+1, max);
+                cache[n] := fibo(n-2)+fibo(n-1);
             end
+            return cache[n];
+        end
     end
-    procedure fib(let k)
+    while (cnt < 30) do
     begin
-        if (k < 2) then 
-            begin 
-                return k; 
-            end
-        else
-            begin 
-                return fib(k-1) + fib(k-2); 
-            end
+        println fibo(cnt);
+        cnt := cnt + 1;
     end
-    let i := 1;
-    while (i <= 50) {
-        println i + ": " + fib2(0, 1, 1, i);
-        i := i + 1;
-    }
-
 end.
