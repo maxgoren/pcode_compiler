@@ -44,16 +44,14 @@ class PCodeVM {
                 bn = base(getInteger(current().nestlevel));
             if (should_trace) {
                 cout<<"Relative Addr: "<<offset<<endl;
-                cout<<"Calculated bn: "<<bn<<endl;
                 cout<<"Calculated ad: "<<bn+offset<<endl;
             }
             return bn+offset;
         }
         void nextInstruction() {
-            curr = codePage[ip];
-            ip++;
+            curr = codePage[ip++];
             if (should_trace)
-                cout<<"Executing: "<<ip<<": "<<instStr[current().instruction]<<" "<<*toString(current().operand)<<" "<<*toString(current().nestlevel)<<endl;
+                cout<<"Executing: "<<ip-1<<": "<<instStr[current().instruction]<<" "<<*toString(current().operand)<<" "<<*toString(current().nestlevel)<<endl;
         }
         void doJump() {
             int next = getInteger(current().operand);
@@ -109,8 +107,7 @@ class PCodeVM {
                 indAddr = base + offset;
             }
             if (should_trace) {
-                cout<<"Base Addr:  "<<base<<endl;
-                cout<<"Offset:     "<<offset<<endl;
+                cout<<"Base Addr:  "<<base<<", Offset:     "<<offset<<endl;
                 cout<<"Indirected: "<<indAddr<<endl;
             }    
             stack[sp] = stack[indAddr];
@@ -126,9 +123,7 @@ class PCodeVM {
                 ixAddr = base + (tsval * scale);
             }
             if (should_trace) {
-                cout<<"Base Addr: "<<base<<endl;
-                cout<<"Scaling: "<<scale<<endl;
-                cout<<"offset : "<<tsval<<endl;
+                cout<<"Base Addr: "<<base<<", Scaling: "<<scale<<", offset : "<<tsval<<endl;
                 cout<<"Indexed Address: "<<ixAddr<<endl;
             }
             sp -= 1;
@@ -137,7 +132,6 @@ class PCodeVM {
         void storeDestructive() {
             int addr = getValue(stack[sp-1]);
             if (should_trace) {
-                cout<<"Calculated bn: "<<getValue(stack[sp-1])<<endl;
                 cout<<"Calculated ad: "<<addr<<endl;
             }
             stack[addr] = stack[sp];
@@ -151,7 +145,6 @@ class PCodeVM {
         void storeNonDestructive() {
             int addr = getValue(stack[sp-1]);
             if (should_trace) {
-                cout<<"Calculated bn: "<<getValue(stack[sp-1])<<endl;
                 cout<<"Calculated ad: "<<addr<<endl;
             }
             stack[addr] = stack[sp];
@@ -159,24 +152,24 @@ class PCodeVM {
             sp -= 1;
         }
         void markStack() {
-            stack[sp+1] = makeInt(bp); dl = sp+1;
-            stack[sp+2] = makeInt(bp); sl = sp+2;
-            stack[sp+3] = makeInt(ip); ra = sp+3;
-            bp = sp+1;
-            sp += 4;
+            stack[sp+1] = makeInt(bp); dl = sp+1;  //dynamic link
+            stack[sp+2] = makeInt(bp); sl = sp+2;  //static link
+            stack[sp+3] = makeInt(ip); ra = sp+3;  //return address
+            bp = sp+1;                             //set new base ptr
+            sp += 4;                               //advance stack ptr
         }
         void callProcedure() {
-            stack[bp+2] = makeInt(ip); ra = bp+2;
-            ip = getInteger(current().operand);
+            stack[bp+2] = makeInt(ip); ra = bp+2;   //update return address
+            ip = getInteger(current().operand);     //set instruction ptr
         }
         void returnFromProcedure() {
-            stack[bp] = stack[sp];
-            sp = bp;
-            ip = getInteger(stack[bp+2]);
-            bp = getInteger(stack[bp+1]); 
-            dl = bp; 
-            sl = bp+1;
-            ra = bp+2;
+            stack[bp] = stack[sp];          //put return value at space saved for it
+            sp = bp;                        //reset stack ptr
+            ip = getInteger(stack[bp+2]);   //reset instruction ptr;
+            bp = getInteger(stack[bp+1]);   //reset base ptr
+            dl = bp;                        //dynamic link
+            sl = bp+1;                      //static link
+            ra = bp+2;                      //return address
         }
         void binaryOperator() {
             switch (current().instruction) {

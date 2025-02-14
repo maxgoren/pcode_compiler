@@ -2,6 +2,7 @@
 #define value_hpp
 #include <iostream>
 #include <cstring>
+#include <cmath>
 #include "syntaxtree.hpp"
 using namespace std;
 
@@ -70,7 +71,14 @@ Value makeBool(bool val) {
     return nv;
 }
 
+bool isWhole(double val) {
+    return std::floor(val) == val;
+}
+
 Value makeReal(double val) {
+    if (isWhole(val)) {
+        return makeInt((int)val);
+    }
     Value nv;
     nv.type = AS_REAL;
     nv.realval = val;
@@ -233,7 +241,7 @@ bool isZero(Value val) {
 Value add(Value lhs, Value rhs) {
     if (lhs.type == AS_STRING || rhs.type == AS_STRING)
         return concatStrings(makeString(toString(lhs)), makeString(toString(rhs)));
-    if (lhs.type == AS_INT || lhs.type == AS_REAL) {
+    if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeReal(a + b);
     }
@@ -241,7 +249,7 @@ Value add(Value lhs, Value rhs) {
 }
 
 Value sub(Value lhs, Value rhs) {
-    if (lhs.type == AS_INT || lhs.type == AS_REAL) {
+    if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeReal(a - b);
     }    
@@ -256,7 +264,7 @@ Value mul(Value lhs, Value rhs) {
             return repeatString(rhs, getPrimitive(lhs));
         }
     }
-    if (lhs.type == AS_INT || lhs.type == AS_REAL) {
+    if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeReal(a * b);
     }    
@@ -264,7 +272,7 @@ Value mul(Value lhs, Value rhs) {
 }
 
 Value div(Value lhs, Value rhs) {
-    if (lhs.type == AS_INT || lhs.type == AS_REAL) {
+    if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         if (b == 0) {
             cout<<"Error: divide by zero"<<endl;
@@ -276,51 +284,51 @@ Value div(Value lhs, Value rhs) {
 }
 
 Value equ(Value lhs, Value rhs) {
-    if (lhs.type == AS_INT || lhs.type == AS_REAL) {
+    if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeBool(a == b);
     }
-    return makeInt(0);        
+    return makeBool(toStdString(lhs) == toStdString(rhs));    
 }
 
 Value neq(Value lhs, Value rhs) {
-    if (lhs.type == AS_INT || lhs.type == AS_REAL) {
+    if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeBool(a != b);
     }    
-    return makeInt(0);    
+    return makeBool(toStdString(lhs) != toStdString(rhs));    
 }
 
 Value lte(Value lhs, Value rhs) {
-    if (lhs.type == AS_INT || lhs.type == AS_REAL) {
+    if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeBool(a <= b);
     }    
-    return makeInt(0);    
+    return makeBool(toStdString(lhs) <= toStdString(rhs));    
 }
 
 Value gte(Value lhs, Value rhs) {
-    if (lhs.type == AS_INT || lhs.type == AS_REAL) {
+    if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeBool(a >= b);
     }    
-    return makeInt(0);    
+    return makeBool(toStdString(lhs) >= toStdString(rhs));    
 }
 
 Value lt(Value lhs, Value rhs) {
-    if (lhs.type == AS_INT || lhs.type == AS_REAL) {
+    if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeBool(a < b);
     }    
-    return makeInt(0);    
+    return makeBool(toStdString(lhs) < toStdString(rhs));    
 }
 
 Value gt(Value lhs, Value rhs) {
-    if (lhs.type == AS_INT || lhs.type == AS_REAL) {
+    if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeBool(a > b);
     }    
-    return makeInt(0);    
+    return makeBool(toStdString(lhs) > toStdString(rhs));    
 }
 
 Value neg(Value lhs) {

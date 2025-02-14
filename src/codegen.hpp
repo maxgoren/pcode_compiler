@@ -24,21 +24,20 @@ class PCodeGenerator {
         int highCI;
         void emit(Inst op, Value operand, Value nestLevel) {
             codepage[cPos++] = Instruction(op, operand, nestLevel);
-            //cPos++;
             if (highCI < cPos) highCI = cPos;
         }
         void emit(Inst op, Value operand) {
             codepage[cPos++] = Instruction(op, operand);
-            //cPos++;
             if (highCI < cPos) highCI = cPos;
         }
         void emit(Inst inst) {
             codepage[cPos++] = Instruction(inst);
-            //cPos++;
             if (highCI < cPos) highCI = cPos;
         }
-        void emitLabel() {
-            emit(LAB, makeString(makeLabel()));
+        string emitLabel() {
+            string label = makeLabel();
+            emit(LAB, makeString(label));
+            return label;
         }
         int getLabelAddr(string label) {
             int i = 0;
@@ -125,7 +124,6 @@ class PCodeGenerator {
                     emit(STN);
                 } break;
                 case FUNC_DEF_STMT: {
-                    string pre = makeLabel();
                     st.openScope(node->data.strval);
                     int s1 = skipEmit(2);
                     emit(ENT, makeString(node->data.strval));
@@ -134,6 +132,7 @@ class PCodeGenerator {
                     int c1 = skipEmit(0);
                     backUpEmit(s1);
                     emit(JMP, makeInt(c1));
+                    string pre = makeLabel();
                     emit(LAB, makeString(pre));
                     resotreEmit();
                     st.closeScope();
