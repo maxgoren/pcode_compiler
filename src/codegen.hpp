@@ -21,45 +21,82 @@ class PCodeGenerator {
         vector<Instruction> codepage;
         bool genparam;
         int cPos;
+        int highCI;
         void emit(Inst op, Value operand, Value nestLevel) {
-            codepage[cPos] = Instruction(op, operand, nestLevel);
-            cPos++;
+            codepage[cPos++] = Instruction(op, operand, nestLevel);
+            //cPos++;
+            if (highCI < cPos) highCI = cPos;
         }
         void emit(Inst op, Value operand) {
-            codepage[cPos] = Instruction(op, operand);
-            cPos++;
+            codepage[cPos++] = Instruction(op, operand);
+            //cPos++;
+            if (highCI < cPos) highCI = cPos;
         }
         void emit(Inst inst) {
-            codepage[cPos] = Instruction(inst);
-            cPos++;
+            codepage[cPos++] = Instruction(inst);
+            //cPos++;
+            if (highCI < cPos) highCI = cPos;
+        }
+        void emitLabel() {
+            emit(LAB, makeString(makeLabel()));
+        }
+        int getLabelAddr(string label) {
+            int i = 0;
+            while (i < codepage.size()) {
+                if (codepage[i].instruction == LAB && label == toStdString(codepage[i].operand))
+                    break;
+                i++;
+            }
+            return i;
+        }
+        int getFunctionAddr(string funcname) {
+            int i = 0;
+            while (i < codepage.size()) {
+                if (codepage[i].instruction == ENT && funcname == toStdString(codepage[i].operand))
+                    break;
+                i++;
+            }
+            return i;
+        }
+        int skipEmit(int spaces) {
+            int old = cPos;
+            cPos += spaces;
+            if (highCI < cPos) highCI = cPos;
+            return old;
+        } 
+        void backUpEmit(int addr) {
+            cPos = addr;
+        }
+        void resotreEmit() {
+            cPos = highCI;
         }
         void genIfStmt(ASTNode* node, bool isAddr) {
-            string l1, l2;
             genCode(node->child[0], isAddr);
-            l1 = makeLabel();
-            emit(JPC, makeString(l1));
+            int s1 = skipEmit(1);
             genCode(node->child[1], isAddr);
-            if (node->child[2] != nullptr) {
-                l2 = makeLabel();
-                emit(JMP, makeString(l2));
-            }
-            emit(LAB, makeString(l1));
-            if (node->child[2] != nullptr) {
-                genCode(node->child[2], isAddr);
-                emit(LAB, makeString(l2));
-            }
+            int s2 = skipEmit(1);
+            int c1 = skipEmit(0);
+            backUpEmit(s1);
+            emit(JPC, makeInt(c1));
+            resotreEmit();
+            genCode(node->child[2], isAddr);
+            c1 = skipEmit(0);
+            backUpEmit(s2);
+            emit(JMP, makeInt(c1));
+            resotreEmit();
         }
         void genWhileStmt(ASTNode* node, bool isAddr) {
-            string l1;
-            string l2;
-            l1 = makeLabel();
-            emit(LAB, makeString(l1));
+            string test_label = makeLabel();
+            emit(LAB, makeString(test_label));
             genCode(node->child[0], isAddr);
-            l2 = makeLabel();
-            emit(JPC, makeString(l2));
+            int s1 = skipEmit(1);
             genCode(node->child[1], isAddr);
-            emit(JMP, makeString(l1));
-            emit(LAB, makeString(l2));
+            emit(JMP, makeInt(getLabelAddr(test_label)));
+            string exit_label = makeLabel();
+            emit(LAB, makeString(exit_label));
+            backUpEmit(s1);
+            emit(JPC, makeInt(getLabelAddr(exit_label)));
+            resotreEmit();
         }
         void genStmt(ASTNode* node, bool isAddr) {
             switch (node->type.stmt) {
@@ -86,6 +123,20 @@ class PCodeGenerator {
                     emit(LDA, makeInt(lv->loc), makeInt(lv->depth));
                     genCodeNS(node->child[0],false);
                     emit(STN);
+                } break;
+                case FUNC_DEF_STMT: {
+                    string pre = makeLabel();
+                    st.openScope(node->data.strval);
+                    int s1 = skipEmit(2);
+                    emit(ENT, makeString(node->data.strval));
+                    genCode(node->child[1], isAddr);
+                    emit(RET);
+                    int c1 = skipEmit(0);
+                    backUpEmit(s1);
+                    emit(JMP, makeInt(c1));
+                    emit(LAB, makeString(pre));
+                    resotreEmit();
+                    st.closeScope();
                 } break;
                 case IF_STMT: {
                     genIfStmt(node, isAddr);
@@ -206,17 +257,6 @@ class PCodeGenerator {
                     genExpr(node->child[RIGHTCHILD], false);
                     emit(STO);
                 } break;
-                case LAMBDA_EXPR: {
-                    string pre = makeLabel();
-                    string after = makeLabel();
-                    st.openScope(node->data.strval);
-                    emit(JMP, makeString(after));
-                    emit(ENT, makeString(node->data.strval));
-                    genCode(node->child[1], isAddr);
-                    emit(RET);
-                    emit(LAB, makeString(after));
-                    st.closeScope();
-                } break;
                 case FUNC_EXPR: {
                     emit(MST);
                     ASTNode* t = node->child[1];
@@ -228,7 +268,7 @@ class PCodeGenerator {
                         sloc++;
                     }
                     genparam = false;
-                    emit(CAL, makeString(node->data.strval));
+                    emit(CAL, makeInt(getFunctionAddr(node->data.strval)));
                 } break;
                 case BLESS_EXPR: {
                     int saddr = st.allocStruct(node->child[LEFTCHILD]->data.strval);
@@ -304,9 +344,17 @@ class PCodeGenerator {
                                 buildST(node->child[0]);
                                 st.closeScope();
                             } break;
+                            case FUNC_DEF_STMT: {
+                                st.openScope(node->data.strval);
+                                buildST(node->child[0]);
+                                buildST(node->child[1]);
+                                st.closeScope();
+                                buildST(node->next);
+                                return;
+                            } break;
                         };
                         break;
-                    case EXPR_NODE: 
+                    case EXPR_NODE: {
                         switch (node->type.expr) {
                             case ID_EXPR: {
                                 if (hasField(node)) {
@@ -325,16 +373,8 @@ class PCodeGenerator {
                                     cout<<"Error: undeclared ass variable trying to be used: "<<node->data.strval<<endl;
                                 }     
                             } break;
-                            case LAMBDA_EXPR: {
-                                st.openScope(node->data.strval);
-                                buildST(node->child[0]);
-                                buildST(node->child[1]);
-                                st.closeScope();
-                                buildST(node->next);
-                                return;
-                            } break;
-
-                        } break;
+                        };
+                    } break;
                     default: break;
                 }
                 for (int i = 0; i < 3; i++)

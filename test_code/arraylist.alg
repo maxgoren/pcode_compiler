@@ -18,7 +18,7 @@ begin
         end
     end
     {* main procedure starts here *}
-    while (cnt < 15) do
+    while (cnt < 3) do
     begin 
         addToBack(2*cnt+1);
         cnt := cnt + 1;

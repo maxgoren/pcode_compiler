@@ -171,6 +171,11 @@ String* toString(Value val) {
     return createString(" ", 1);
 }
 
+std::string toStdString(Value obj) {
+    String* str = toString(obj);
+    return str->str;
+}
+
 std::ostream& operator<<(std::ostream& os, Value& val) {
     os<<*toString(val);
     return os;

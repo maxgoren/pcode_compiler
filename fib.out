@@ -1,0 +1,3640 @@
+0: [TK_PROGRAM, program]
+1: [TK_ID, fibonacci]
+2: [TK_BEGIN, begin]
+3: [TK_LET, let]
+4: [TK_ID, cache]
+5: [TK_LB, []
+6: [TK_NUM, 100]
+7: [TK_RB, ]]
+8: [TK_SEMI, ;]
+9: [TK_LET, let]
+10: [TK_ID, cnt]
+11: [TK_ASSIGN, :=]
+12: [TK_NUM, 0]
+13: [TK_SEMI, ;]
+14: [TK_AMPER, procedure]
+15: [TK_ID, fibo]
+16: [TK_LP, (]
+17: [TK_LET, var]
+18: [TK_ID, n]
+19: [TK_RP, )]
+20: [TK_BEGIN, begin]
+21: [TK_IF, if]
+22: [TK_LP, (]
+23: [TK_ID, n]
+24: [TK_LTE, <=]
+25: [TK_NUM, 1]
+26: [TK_RP, )]
+27: [TK_THEN, then]
+28: [TK_BEGIN, begin]
+29: [TK_RETURN, return]
+30: [TK_NUM, 1]
+31: [TK_SEMI, ;]
+32: [TK_END, end]
+33: [TK_ELSE, else]
+34: [TK_BEGIN, begin]
+35: [TK_IF, if]
+36: [TK_LP, (]
+37: [TK_ID, cache]
+38: [TK_LB, []
+39: [TK_ID, n]
+40: [TK_RB, ]]
+41: [TK_EQU, ==]
+42: [TK_NUM, 0]
+43: [TK_RP, )]
+44: [TK_THEN, then]
+45: [TK_BEGIN, begin]
+46: [TK_ID, cache]
+47: [TK_LB, []
+48: [TK_ID, n]
+49: [TK_RB, ]]
+50: [TK_ASSIGN, :=]
+51: [TK_ID, fibo]
+52: [TK_LP, (]
+53: [TK_ID, n]
+54: [TK_SUB, -]
+55: [TK_NUM, 2]
+56: [TK_RP, )]
+57: [TK_ADD, +]
+58: [TK_ID, fibo]
+59: [TK_LP, (]
+60: [TK_ID, n]
+61: [TK_SUB, -]
+62: [TK_NUM, 1]
+63: [TK_RP, )]
+64: [TK_SEMI, ;]
+65: [TK_END, end]
+66: [TK_RETURN, return]
+67: [TK_ID, cache]
+68: [TK_LB, []
+69: [TK_ID, n]
+70: [TK_RB, ]]
+71: [TK_SEMI, ;]
+72: [TK_END, end]
+73: [TK_END, end]
+74: [TK_WHILE, while]
+75: [TK_LP, (]
+76: [TK_ID, cnt]
+77: [TK_LT, <]
+78: [TK_NUM, 30]
+79: [TK_RP, )]
+80: [TK_DO, do]
+81: [TK_BEGIN, begin]
+82: [TK_PRINT, println]
+83: [TK_ID, fibo]
+84: [TK_LP, (]
+85: [TK_ID, cnt]
+86: [TK_RP, )]
+87: [TK_SEMI, ;]
+88: [TK_ID, cnt]
+89: [TK_ASSIGN, :=]
+90: [TK_ID, cnt]
+91: [TK_ADD, +]
+92: [TK_NUM, 1]
+93: [TK_SEMI, ;]
+94: [TK_END, end]
+95: [TK_END, end]
+96: [TK_PERIOD, .]
+97: [TK_EOI, <fin.>]
+ [PROGRAM_STMT] [TK_PROGRAM, program]
+  [LET_STMT] [TK_ID, cache]
+   [SUBSCRIPT_EXPR] [TK_NUM, 100]
+    [CONST_EXPR] [TK_NUM, 100]
+   [LET_STMT] [TK_ID, cnt]
+    [CONST_EXPR] [TK_NUM, 0]
+    [FUNC_DEF_STMT] [TK_ID, fibo]
+     [LET_STMT] [TK_ID, n]
+     [IF_STMT] [TK_IF, if]
+      [RELOP_EXPR] [TK_LTE, <=]
+       [ID_EXPR] [TK_ID, n]
+       [CONST_EXPR] [TK_NUM, 1]
+      [RETURN_STMT] [TK_RETURN, return]
+       [CONST_EXPR] [TK_NUM, 1]
+      [IF_STMT] [TK_IF, if]
+       [RELOP_EXPR] [TK_EQU, ==]
+        [SUBSCRIPT_EXPR] [TK_LB, []
+         [ID_EXPR] [TK_ID, cache]
+         [ID_EXPR] [TK_ID, n]
+        [CONST_EXPR] [TK_NUM, 0]
+       [EXPR_STMT] [TK_ID, cache]
+        [ASSIGN_EXPR] [TK_ASSIGN, :=]
+         [SUBSCRIPT_EXPR] [TK_LB, []
+          [ID_EXPR] [TK_ID, cache]
+          [ID_EXPR] [TK_ID, n]
+         [BINOP_EXPR] [TK_ADD, +]
+          [FUNC_EXPR] [TK_ID, fibo]
+           [BINOP_EXPR] [TK_SUB, -]
+            [ID_EXPR] [TK_ID, n]
+            [CONST_EXPR] [TK_NUM, 2]
+          [FUNC_EXPR] [TK_ID, fibo]
+           [BINOP_EXPR] [TK_SUB, -]
+            [ID_EXPR] [TK_ID, n]
+            [CONST_EXPR] [TK_NUM, 1]
+       [RETURN_STMT] [TK_RETURN, return]
+        [SUBSCRIPT_EXPR] [TK_LB, []
+         [ID_EXPR] [TK_ID, cache]
+         [ID_EXPR] [TK_ID, n]
+     [WHILE_STMT] [TK_WHILE, while]
+      [RELOP_EXPR] [TK_LT, <]
+       [ID_EXPR] [TK_ID, cnt]
+       [CONST_EXPR] [TK_NUM, 30]
+      [PRINT_STMT] [TK_PRINT, println]
+       [FUNC_EXPR] [TK_ID, fibo]
+        [ID_EXPR] [TK_ID, cnt]
+       [EXPR_STMT] [TK_ID, cnt]
+        [ASSIGN_EXPR] [TK_ASSIGN, :=]
+         [ID_EXPR] [TK_ID, cnt]
+         [BINOP_EXPR] [TK_ADD, +]
+          [ID_EXPR] [TK_ID, cnt]
+          [CONST_EXPR] [TK_NUM, 1]
+Building Symbol Table: 
+cache added to symbol table
+cnt added to symbol table
+Searching for: fibo  . Not found.
+Open scope for: fibo
+n added to symbol table
+Searching for: n  . Found.
+Searching for: cache  .  . Found.
+Searching for: n  . Found.
+Searching for: cache  .  . Found.
+Searching for: n  . Found.
+Searching for: n  . Found.
+Searching for: n  . Found.
+Searching for: cache  .  . Found.
+Searching for: n  . Found.
+Closing scope.
+Searching for: cnt  . Found.
+Searching for: cnt  . Found.
+Searching for: cnt  . Found.
+Searching for: cnt  . Found.
+Symbol Table: 
+cnt: Localvar: 4999, Scalar.
+cache: Localvar: 5000, Scalar.
+fibo: Procedure: fibo
+			n: Localvar: 0, Scalar.
+Generating P-Code...
+Searching for: cache  . Found.
+Searching for: cnt  . Found.
+Searching for: fibo  . Found.
+Open scope for: fibo
+Searching for: n  . Found.
+Searching for: cache  .  . Found.
+Searching for: n  . Found.
+Searching for: cache  .  . Found.
+Searching for: n  . Found.
+Searching for: n  . Found.
+Searching for: n  . Found.
+Searching for: cache  .  . Found.
+Searching for: n  . Found.
+Closing scope.
+Searching for: cnt  . Found.
+Searching for: cnt  . Found.
+Searching for: cnt  . Found.
+Searching for: cnt  . Found.
+Done.
+( LDA, 5000, 0)
+( LDC, 100.000000, 0)
+( IXA, 1, 0)
+( LDI, 0, 0)
+( STN, 0, 0)
+( LDA, 4999, 0)
+( LDC, 0.000000, 0)
+( STN, 0, 0)
+( JMP, L1, 0)
+( ENT, fibo, 0)
+( LOD, 0, 0)
+( LDC, 1.000000, 0)
+( LTE, 0, 0)
+( JPC, L2, 0)
+( LDC, 1.000000, 0)
+( JMP, L3, 0)
+( LAB, L2, 0)
+( LOD, 5000, 0)
+( LOD, 0, 0)
+( IXA, 1, 0)
+( LDI, 0, 0)
+( LDC, 0.000000, 0)
+( EQU, 0, 0)
+( JPC, L4, 0)
+( LOD, 5000, 0)
+( LOD, 0, 0)
+( IXA, 1, 0)
+( MST, 0, 0)
+( LDP, 0, 0)
+( LDC, 2.000000, 0)
+( SUB, 0, 0)
+( CAL, fibo, 0)
+( MST, 0, 0)
+( LDP, 0, 0)
+( LDC, 1.000000, 0)
+( SUB, 0, 0)
+( CAL, fibo, 0)
+( ADD, 0, 0)
+( STO, 0, 0)
+( LAB, L4, 0)
+( LOD, 5000, 0)
+( LOD, 0, 0)
+( IXA, 1, 0)
+( LDI, 0, 0)
+( LAB, L3, 0)
+( RET, 0, 0)
+( LAB, L1, 0)
+( LAB, L5, 0)
+( LOD, 4999, 0)
+( LDC, 30.000000, 0)
+(  LT, 0, 0)
+( JPC, L6, 0)
+( MST, 0, 0)
+( LDP, 4999, 0)
+( CAL, fibo, 0)
+(PRINT, 0, 0)
+( LDA, 4999, 0)
+( LOD, 4999, 0)
+( LDC, 1.000000, 0)
+( ADD, 0, 0)
+( STO, 0, 0)
+( JMP, L5, 0)
+( LAB, L6, 0)
+(HALT, 0, 0)
+Executing: 1: LDA 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 2: LDC 100.000000 0
+Executing: 3: IXA 1 0
+Base Addr: 5000
+Scaling: 1
+offset : 100
+Indexed Address: 4900
+Executing: 4: LDI 0 0
+Base Addr:  4900
+Offset:     0
+Indirected: 4900
+Executing: 5: STN 0 0
+Calculated bn: 0
+Calculated ad: 0
+Executing: 6: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 7: LDC 0.000000 0
+Executing: 8: STN 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 9: JMP L1 0
+Executing: 47: LAB L1 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 15: LDC 1.000000 0
+Executing: 16: JMP L3 0
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					1.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 15: LDC 1.000000 0
+Executing: 16: JMP L3 0
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					1.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 2
+Indexed Address: 2
+Executing: 21: LDI 0 0
+Base Addr:  2
+Offset:     0
+Indirected: 2
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 25: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 26: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 27: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 2
+Indexed Address: 2
+Executing: 28: MST 0 0
+Executing: 29: LDP 0 0
+Executing: 30: LDC 2.000000 0
+Executing: 31: SUB 0 0
+Executing: 32: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 15: LDC 1.000000 0
+Executing: 16: JMP L3 0
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 33: MST 0 0
+Executing: 34: LDP 0 0
+Executing: 35: LDC 1.000000 0
+Executing: 36: SUB 0 0
+Executing: 37: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 15: LDC 1.000000 0
+Executing: 16: JMP L3 0
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 38: ADD 0 0
+Executing: 39: STO 0 0
+Calculated bn: 2
+Calculated ad: 2
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 2
+Indexed Address: 2
+Executing: 44: LDI 0 0
+Base Addr:  2
+Offset:     0
+Indirected: 2
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					2.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 3
+Indexed Address: 3
+Executing: 21: LDI 0 0
+Base Addr:  3
+Offset:     0
+Indirected: 3
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 25: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 26: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 27: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 3
+Indexed Address: 3
+Executing: 28: MST 0 0
+Executing: 29: LDP 0 0
+Executing: 30: LDC 2.000000 0
+Executing: 31: SUB 0 0
+Executing: 32: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 15: LDC 1.000000 0
+Executing: 16: JMP L3 0
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 33: MST 0 0
+Executing: 34: LDP 0 0
+Executing: 35: LDC 1.000000 0
+Executing: 36: SUB 0 0
+Executing: 37: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 2
+Indexed Address: 2
+Executing: 21: LDI 0 0
+Base Addr:  2
+Offset:     0
+Indirected: 2
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 2
+Indexed Address: 2
+Executing: 44: LDI 0 0
+Base Addr:  2
+Offset:     0
+Indirected: 2
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 38: ADD 0 0
+Executing: 39: STO 0 0
+Calculated bn: 3
+Calculated ad: 3
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 3
+Indexed Address: 3
+Executing: 44: LDI 0 0
+Base Addr:  3
+Offset:     0
+Indirected: 3
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					3.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 4
+Indexed Address: 4
+Executing: 21: LDI 0 0
+Base Addr:  4
+Offset:     0
+Indirected: 4
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 25: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 26: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 27: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 4
+Indexed Address: 4
+Executing: 28: MST 0 0
+Executing: 29: LDP 0 0
+Executing: 30: LDC 2.000000 0
+Executing: 31: SUB 0 0
+Executing: 32: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 2
+Indexed Address: 2
+Executing: 21: LDI 0 0
+Base Addr:  2
+Offset:     0
+Indirected: 2
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 2
+Indexed Address: 2
+Executing: 44: LDI 0 0
+Base Addr:  2
+Offset:     0
+Indirected: 2
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 33: MST 0 0
+Executing: 34: LDP 0 0
+Executing: 35: LDC 1.000000 0
+Executing: 36: SUB 0 0
+Executing: 37: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 3
+Indexed Address: 3
+Executing: 21: LDI 0 0
+Base Addr:  3
+Offset:     0
+Indirected: 3
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 3
+Indexed Address: 3
+Executing: 44: LDI 0 0
+Base Addr:  3
+Offset:     0
+Indirected: 3
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 38: ADD 0 0
+Executing: 39: STO 0 0
+Calculated bn: 4
+Calculated ad: 4
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 4
+Indexed Address: 4
+Executing: 44: LDI 0 0
+Base Addr:  4
+Offset:     0
+Indirected: 4
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					5.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 21: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 25: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 26: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 27: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 28: MST 0 0
+Executing: 29: LDP 0 0
+Executing: 30: LDC 2.000000 0
+Executing: 31: SUB 0 0
+Executing: 32: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 3
+Indexed Address: 3
+Executing: 21: LDI 0 0
+Base Addr:  3
+Offset:     0
+Indirected: 3
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 3
+Indexed Address: 3
+Executing: 44: LDI 0 0
+Base Addr:  3
+Offset:     0
+Indirected: 3
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 33: MST 0 0
+Executing: 34: LDP 0 0
+Executing: 35: LDC 1.000000 0
+Executing: 36: SUB 0 0
+Executing: 37: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 4
+Indexed Address: 4
+Executing: 21: LDI 0 0
+Base Addr:  4
+Offset:     0
+Indirected: 4
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 4
+Indexed Address: 4
+Executing: 44: LDI 0 0
+Base Addr:  4
+Offset:     0
+Indirected: 4
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 38: ADD 0 0
+Executing: 39: STO 0 0
+Calculated bn: 5
+Calculated ad: 5
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 44: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					8.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 6
+Indexed Address: 6
+Executing: 21: LDI 0 0
+Base Addr:  6
+Offset:     0
+Indirected: 6
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 25: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 26: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 27: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 6
+Indexed Address: 6
+Executing: 28: MST 0 0
+Executing: 29: LDP 0 0
+Executing: 30: LDC 2.000000 0
+Executing: 31: SUB 0 0
+Executing: 32: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 4
+Indexed Address: 4
+Executing: 21: LDI 0 0
+Base Addr:  4
+Offset:     0
+Indirected: 4
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 4
+Indexed Address: 4
+Executing: 44: LDI 0 0
+Base Addr:  4
+Offset:     0
+Indirected: 4
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 33: MST 0 0
+Executing: 34: LDP 0 0
+Executing: 35: LDC 1.000000 0
+Executing: 36: SUB 0 0
+Executing: 37: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 21: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 44: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 38: ADD 0 0
+Executing: 39: STO 0 0
+Calculated bn: 6
+Calculated ad: 6
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 6
+Indexed Address: 6
+Executing: 44: LDI 0 0
+Base Addr:  6
+Offset:     0
+Indirected: 6
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					13.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 7
+Indexed Address: 7
+Executing: 21: LDI 0 0
+Base Addr:  7
+Offset:     0
+Indirected: 7
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 25: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 26: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 27: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 7
+Indexed Address: 7
+Executing: 28: MST 0 0
+Executing: 29: LDP 0 0
+Executing: 30: LDC 2.000000 0
+Executing: 31: SUB 0 0
+Executing: 32: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 21: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 44: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 33: MST 0 0
+Executing: 34: LDP 0 0
+Executing: 35: LDC 1.000000 0
+Executing: 36: SUB 0 0
+Executing: 37: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 6
+Indexed Address: 6
+Executing: 21: LDI 0 0
+Base Addr:  6
+Offset:     0
+Indirected: 6
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 25: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 26: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 27: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 6
+Indexed Address: 6
+Executing: 28: MST 0 0
+Executing: 29: LDP 0 0
+Executing: 30: LDC 2.000000 0
+Executing: 31: SUB 0 0
+Executing: 32: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 23
+Calculated ad: 23
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 23
+Calculated ad: 23
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 4
+Indexed Address: 4
+Executing: 21: LDI 0 0
+Base Addr:  4
+Offset:     0
+Indirected: 4
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 23
+Calculated ad: 23
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 4
+Indexed Address: 4
+Executing: 44: LDI 0 0
+Base Addr:  4
+Offset:     0
+Indirected: 4
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 33: MST 0 0
+Executing: 34: LDP 0 0
+Executing: 35: LDC 1.000000 0
+Executing: 36: SUB 0 0
+Executing: 37: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 24
+Calculated ad: 24
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 24
+Calculated ad: 24
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 21: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 24
+Calculated ad: 24
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 44: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 38: ADD 0 0
+Executing: 39: STO 0 0
+Calculated bn: 6
+Calculated ad: 6
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 6
+Indexed Address: 6
+Executing: 44: LDI 0 0
+Base Addr:  6
+Offset:     0
+Indirected: 6
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 38: ADD 0 0
+Executing: 39: STO 0 0
+Calculated bn: 7
+Calculated ad: 7
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 7
+Indexed Address: 7
+Executing: 44: LDI 0 0
+Base Addr:  7
+Offset:     0
+Indirected: 7
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					21.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 8
+Indexed Address: 8
+Executing: 21: LDI 0 0
+Base Addr:  8
+Offset:     0
+Indirected: 8
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 8
+Indexed Address: 8
+Executing: 44: LDI 0 0
+Base Addr:  8
+Offset:     0
+Indirected: 8
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					55
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 9
+Indexed Address: 9
+Executing: 21: LDI 0 0
+Base Addr:  9
+Offset:     0
+Indirected: 9
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 25: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 26: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 27: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 9
+Indexed Address: 9
+Executing: 28: MST 0 0
+Executing: 29: LDP 0 0
+Executing: 30: LDC 2.000000 0
+Executing: 31: SUB 0 0
+Executing: 32: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 7
+Indexed Address: 7
+Executing: 21: LDI 0 0
+Base Addr:  7
+Offset:     0
+Indirected: 7
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 25: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 26: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 27: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 7
+Indexed Address: 7
+Executing: 28: MST 0 0
+Executing: 29: LDP 0 0
+Executing: 30: LDC 2.000000 0
+Executing: 31: SUB 0 0
+Executing: 32: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 22
+Calculated ad: 22
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 22
+Calculated ad: 22
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 21: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 22
+Calculated ad: 22
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 44: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 33: MST 0 0
+Executing: 34: LDP 0 0
+Executing: 35: LDC 1.000000 0
+Executing: 36: SUB 0 0
+Executing: 37: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 23
+Calculated ad: 23
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 23
+Calculated ad: 23
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 6
+Indexed Address: 6
+Executing: 21: LDI 0 0
+Base Addr:  6
+Offset:     0
+Indirected: 6
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 25: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 26: LOD 0 0
+Relative Addr: 0
+Calculated bn: 23
+Calculated ad: 23
+Executing: 27: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 6
+Indexed Address: 6
+Executing: 28: MST 0 0
+Executing: 29: LDP 0 0
+Executing: 30: LDC 2.000000 0
+Executing: 31: SUB 0 0
+Executing: 32: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 29
+Calculated ad: 29
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 29
+Calculated ad: 29
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 4
+Indexed Address: 4
+Executing: 21: LDI 0 0
+Base Addr:  4
+Offset:     0
+Indirected: 4
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 29
+Calculated ad: 29
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 4
+Indexed Address: 4
+Executing: 44: LDI 0 0
+Base Addr:  4
+Offset:     0
+Indirected: 4
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 33: MST 0 0
+Executing: 34: LDP 0 0
+Executing: 35: LDC 1.000000 0
+Executing: 36: SUB 0 0
+Executing: 37: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 30
+Calculated ad: 30
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 30
+Calculated ad: 30
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 21: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 30
+Calculated ad: 30
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 5
+Indexed Address: 5
+Executing: 44: LDI 0 0
+Base Addr:  5
+Offset:     0
+Indirected: 5
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 38: ADD 0 0
+Executing: 39: STO 0 0
+Calculated bn: 6
+Calculated ad: 6
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 23
+Calculated ad: 23
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 6
+Indexed Address: 6
+Executing: 44: LDI 0 0
+Base Addr:  6
+Offset:     0
+Indirected: 6
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 38: ADD 0 0
+Executing: 39: STO 0 0
+Calculated bn: 7
+Calculated ad: 7
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 16
+Calculated ad: 16
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 7
+Indexed Address: 7
+Executing: 44: LDI 0 0
+Base Addr:  7
+Offset:     0
+Indirected: 7
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 33: MST 0 0
+Executing: 34: LDP 0 0
+Executing: 35: LDC 1.000000 0
+Executing: 36: SUB 0 0
+Executing: 37: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 8
+Indexed Address: 8
+Executing: 21: LDI 0 0
+Base Addr:  8
+Offset:     0
+Indirected: 8
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 17
+Calculated ad: 17
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 8
+Indexed Address: 8
+Executing: 44: LDI 0 0
+Base Addr:  8
+Offset:     0
+Indirected: 8
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 38: ADD 0 0
+Executing: 39: STO 0 0
+Calculated bn: 9
+Calculated ad: 9
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 9
+Indexed Address: 9
+Executing: 44: LDI 0 0
+Base Addr:  9
+Offset:     0
+Indirected: 9
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					76.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 10
+Indexed Address: 10
+Executing: 21: LDI 0 0
+Base Addr:  10
+Offset:     0
+Indirected: 10
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 10
+Indexed Address: 10
+Executing: 44: LDI 0 0
+Base Addr:  10
+Offset:     0
+Indirected: 10
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					10.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 11
+Indexed Address: 11
+Executing: 21: LDI 0 0
+Base Addr:  11
+Offset:     0
+Indirected: 11
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 11
+Indexed Address: 11
+Executing: 44: LDI 0 0
+Base Addr:  11
+Offset:     0
+Indirected: 11
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					11
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 12
+Indexed Address: 12
+Executing: 21: LDI 0 0
+Base Addr:  12
+Offset:     0
+Indirected: 12
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 12
+Indexed Address: 12
+Executing: 44: LDI 0 0
+Base Addr:  12
+Offset:     0
+Indirected: 12
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					12.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 13
+Indexed Address: 13
+Executing: 21: LDI 0 0
+Base Addr:  13
+Offset:     0
+Indirected: 13
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 13
+Indexed Address: 13
+Executing: 44: LDI 0 0
+Base Addr:  13
+Offset:     0
+Indirected: 13
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					55
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 14
+Indexed Address: 14
+Executing: 21: LDI 0 0
+Base Addr:  14
+Offset:     0
+Indirected: 14
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 14
+Indexed Address: 14
+Executing: 44: LDI 0 0
+Base Addr:  14
+Offset:     0
+Indirected: 14
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					6
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 15
+Indexed Address: 15
+Executing: 21: LDI 0 0
+Base Addr:  15
+Offset:     0
+Indirected: 15
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 15
+Indexed Address: 15
+Executing: 44: LDI 0 0
+Base Addr:  15
+Offset:     0
+Indirected: 15
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					37
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 16
+Indexed Address: 16
+Executing: 21: LDI 0 0
+Base Addr:  16
+Offset:     0
+Indirected: 16
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 16
+Indexed Address: 16
+Executing: 44: LDI 0 0
+Base Addr:  16
+Offset:     0
+Indirected: 16
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					7.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 17
+Indexed Address: 17
+Executing: 21: LDI 0 0
+Base Addr:  17
+Offset:     0
+Indirected: 17
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 17
+Indexed Address: 17
+Executing: 44: LDI 0 0
+Base Addr:  17
+Offset:     0
+Indirected: 17
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					8.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 18
+Indexed Address: 18
+Executing: 21: LDI 0 0
+Base Addr:  18
+Offset:     0
+Indirected: 18
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 18
+Indexed Address: 18
+Executing: 44: LDI 0 0
+Base Addr:  18
+Offset:     0
+Indirected: 18
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					55
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 19
+Indexed Address: 19
+Executing: 21: LDI 0 0
+Base Addr:  19
+Offset:     0
+Indirected: 19
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 19
+Indexed Address: 19
+Executing: 44: LDI 0 0
+Base Addr:  19
+Offset:     0
+Indirected: 19
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					8.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 20
+Indexed Address: 20
+Executing: 21: LDI 0 0
+Base Addr:  20
+Offset:     0
+Indirected: 20
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 20
+Indexed Address: 20
+Executing: 44: LDI 0 0
+Base Addr:  20
+Offset:     0
+Indirected: 20
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					12
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 21
+Indexed Address: 21
+Executing: 21: LDI 0 0
+Base Addr:  21
+Offset:     0
+Indirected: 21
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 21
+Indexed Address: 21
+Executing: 44: LDI 0 0
+Base Addr:  21
+Offset:     0
+Indirected: 21
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					37
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 22
+Indexed Address: 22
+Executing: 21: LDI 0 0
+Base Addr:  22
+Offset:     0
+Indirected: 22
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 22
+Indexed Address: 22
+Executing: 44: LDI 0 0
+Base Addr:  22
+Offset:     0
+Indirected: 22
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					5.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 23
+Indexed Address: 23
+Executing: 21: LDI 0 0
+Base Addr:  23
+Offset:     0
+Indirected: 23
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 23
+Indexed Address: 23
+Executing: 44: LDI 0 0
+Base Addr:  23
+Offset:     0
+Indirected: 23
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					6.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 24
+Indexed Address: 24
+Executing: 21: LDI 0 0
+Base Addr:  24
+Offset:     0
+Indirected: 24
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 24
+Indexed Address: 24
+Executing: 44: LDI 0 0
+Base Addr:  24
+Offset:     0
+Indirected: 24
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					13.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 25
+Indexed Address: 25
+Executing: 21: LDI 0 0
+Base Addr:  25
+Offset:     0
+Indirected: 25
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 25
+Indexed Address: 25
+Executing: 44: LDI 0 0
+Base Addr:  25
+Offset:     0
+Indirected: 25
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					6.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 26
+Indexed Address: 26
+Executing: 21: LDI 0 0
+Base Addr:  26
+Offset:     0
+Indirected: 26
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 26
+Indexed Address: 26
+Executing: 44: LDI 0 0
+Base Addr:  26
+Offset:     0
+Indirected: 26
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					8.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 27
+Indexed Address: 27
+Executing: 21: LDI 0 0
+Base Addr:  27
+Offset:     0
+Indirected: 27
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 27
+Indexed Address: 27
+Executing: 44: LDI 0 0
+Base Addr:  27
+Offset:     0
+Indirected: 27
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					19
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 28
+Indexed Address: 28
+Executing: 21: LDI 0 0
+Base Addr:  28
+Offset:     0
+Indirected: 28
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 28
+Indexed Address: 28
+Executing: 44: LDI 0 0
+Base Addr:  28
+Offset:     0
+Indirected: 28
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					37
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 53: MST 0 0
+Executing: 54: LDP 4999 0
+Executing: 55: CAL fibo 0
+Executing: 10: ENT fibo 0
+Executing: 11: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 12: LDC 1.000000 0
+Executing: 13: LTE 0 0
+Executing: 14: JPC L2 0
+Executing: 17: LAB L2 0
+Executing: 18: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 19: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 20: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 29
+Indexed Address: 29
+Executing: 21: LDI 0 0
+Base Addr:  29
+Offset:     0
+Indirected: 29
+Executing: 22: LDC 0.000000 0
+Executing: 23: EQU 0 0
+Executing: 24: JPC L4 0
+Executing: 40: LAB L4 0
+Executing: 41: LOD 5000 0
+Relative Addr: 5000
+Calculated bn: 0
+Calculated ad: 5000
+Executing: 42: LOD 0 0
+Relative Addr: 0
+Calculated bn: 10
+Calculated ad: 10
+Executing: 43: IXA 1 0
+Base Addr: 0
+Scaling: 1
+offset : 29
+Indexed Address: 29
+Executing: 44: LDI 0 0
+Base Addr:  29
+Offset:     0
+Indirected: 29
+Executing: 45: LAB L3 0
+Executing: 46: RET 0 0
+Executing: 56: PRINT 0 0
+					4.000000
+Executing: 57: LDA 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 58: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 59: LDC 1.000000 0
+Executing: 60: ADD 0 0
+Executing: 61: STO 0 0
+Calculated bn: 4999
+Calculated ad: 4999
+Executing: 62: JMP L5 0
+Executing: 48: LAB L5 0
+Executing: 49: LOD 4999 0
+Relative Addr: 4999
+Calculated bn: 0
+Calculated ad: 4999
+Executing: 50: LDC 30.000000 0
+Executing: 51: LT 0 0
+Executing: 52: JPC L6 0
+Executing: 63: LAB L6 0
+Executing: 64: HALT 0 0

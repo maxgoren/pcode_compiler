@@ -49,16 +49,6 @@ class PCodeVM {
             }
             return bn+offset;
         }
-        int findLabel(String* str, Inst instType) {
-            for (int i = 0; i < MAX_STACK; i++) {
-                if (i != ip && codePage[i].instruction == instType) {
-                    if (compareStrings(str, getString(codePage[i].operand))) {
-                        return i;
-                    }
-                }
-            }
-            return ip;
-        }
         void nextInstruction() {
             curr = codePage[ip];
             ip++;
@@ -66,12 +56,12 @@ class PCodeVM {
                 cout<<"Executing: "<<ip<<": "<<instStr[current().instruction]<<" "<<*toString(current().operand)<<" "<<*toString(current().nestlevel)<<endl;
         }
         void doJump() {
-            int next = findLabel(getString(current().operand), LAB);
+            int next = getInteger(current().operand);
             ip = next;
         }
         void jumpConditional() {
             if (getBoolean(stack[sp]) == false) {
-                int next = findLabel(getString(current().operand), LAB);
+                int next = getInteger(current().operand);
                 ip = next;
             }
             sp--;
@@ -145,8 +135,7 @@ class PCodeVM {
             stack[sp] = makeInt(ixAddr);
         }
         void storeDestructive() {
-            int addr = getValue(stack[sp-1]);//calculateAddress(getValue(stack[sp-1]));
-            //addr = (addr < 2000) ? getValue(stack[bp+1])+addr:addr;
+            int addr = getValue(stack[sp-1]);
             if (should_trace) {
                 cout<<"Calculated bn: "<<getValue(stack[sp-1])<<endl;
                 cout<<"Calculated ad: "<<addr<<endl;
@@ -160,8 +149,7 @@ class PCodeVM {
             sp -= 2;
         }
         void storeNonDestructive() {
-            int addr = getValue(stack[sp-1]);//calculateAddress(getValue(stack[sp-1]));
-            //addr = (addr < 2000) ? getValue(stack[bp+1])+addr:addr;
+            int addr = getValue(stack[sp-1]);
             if (should_trace) {
                 cout<<"Calculated bn: "<<getValue(stack[sp-1])<<endl;
                 cout<<"Calculated ad: "<<addr<<endl;
@@ -179,7 +167,7 @@ class PCodeVM {
         }
         void callProcedure() {
             stack[bp+2] = makeInt(ip); ra = bp+2;
-            ip = findLabel(getString(current().operand), ENT);
+            ip = getInteger(current().operand);
         }
         void returnFromProcedure() {
             stack[bp] = stack[sp];
@@ -368,6 +356,3 @@ class PCodeVM {
 };
 
 #endif
-
-//let x := 1; func count() { if (x <= 5) { println x; x := x + 1; count(); } else { println "fin."; } }; count();
-// func fact(let k) { if (k < 2) { return 1; } else { return k*fact(k-1); } }; let k := 1; while (k <= 8) { println fact(k); k := k + 1; }
