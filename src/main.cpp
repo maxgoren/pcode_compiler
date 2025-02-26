@@ -24,6 +24,8 @@ void repl(bool should_trace) {
             if (should_trace) {
                 for (auto p : pcode) {
                     cout<<p<<endl;
+                    if (p.instruction == HALT)
+                        break;
                 }
             }
             vm.init(pcode);
@@ -38,8 +40,11 @@ void compileAndRunFromFile(string filename, bool trace) {
     compiler.setTrace(trace);
     vm.setTrace(trace);
     auto pcode = compiler.compileFile(filename);
+    int i = 0;
     for (auto p : pcode) {
-        cout<<p<<endl;
+        cout<<i++<<": "<<p<<endl;
+        if (p.instruction == HALT)
+            break;
     }
     vm.init(pcode);
     vm.execute();

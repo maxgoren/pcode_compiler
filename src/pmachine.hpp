@@ -232,8 +232,9 @@ class PCodeVM {
             should_trace = trace;
         }
         void init(vector<Instruction>& code) {
-            for (int i = 0, j = ip; i < code.size(); i++, j++)
-                codePage[j] = code[i];
+            for (int i = 0; i < code.size(); i++)
+                codePage[i] = code[i];
+            if (ip > 0) ip--;
             curr = codePage[ip];
         }
         void execute() {

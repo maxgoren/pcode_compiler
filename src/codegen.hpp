@@ -63,10 +63,10 @@ class PCodeGenerator {
             if (highCI < cPos) highCI = cPos;
             return old;
         } 
-        void backUpEmit(int addr) {
+        void backup(int addr) {
             cPos = addr;
         }
-        void resotreEmit() {
+        void restore() {
             cPos = highCI;
         }
         void genIfStmt(ASTNode* node, bool isAddr) {
@@ -75,27 +75,26 @@ class PCodeGenerator {
             genCode(node->child[1], isAddr);
             int s2 = skipEmit(1);
             int c1 = skipEmit(0);
-            backUpEmit(s1);
+            backup(s1);
             emit(JPC, makeInt(c1));
-            resotreEmit();
+            restore();
             genCode(node->child[2], isAddr);
             c1 = skipEmit(0);
-            backUpEmit(s2);
+            backup(s2);
             emit(JMP, makeInt(c1));
-            resotreEmit();
+            restore();
         }
         void genWhileStmt(ASTNode* node, bool isAddr) {
-            string test_label = makeLabel();
-            emit(LAB, makeString(test_label));
+            string test_label = emitLabel();
             genCode(node->child[0], isAddr);
             int s1 = skipEmit(1);
             genCode(node->child[1], isAddr);
             emit(JMP, makeInt(getLabelAddr(test_label)));
-            string exit_label = makeLabel();
-            emit(LAB, makeString(exit_label));
-            backUpEmit(s1);
-            emit(JPC, makeInt(getLabelAddr(exit_label)));
-            resotreEmit();
+            //string exit_label = emitLabel();
+            int c1 = skipEmit(0);
+            backup(s1);
+            emit(JPC, makeInt(c1)); //getLabelAddr(exit_label)));
+            restore();
         }
         void genStmt(ASTNode* node, bool isAddr) {
             switch (node->type.stmt) {
@@ -130,11 +129,11 @@ class PCodeGenerator {
                     genCode(node->child[1], isAddr);
                     emit(RET);
                     int c1 = skipEmit(0);
-                    backUpEmit(s1);
+                    backup(s1);
                     emit(JMP, makeInt(c1));
                     string pre = makeLabel();
                     emit(LAB, makeString(pre));
-                    resotreEmit();
+                    restore();
                     st.closeScope();
                 } break;
                 case IF_STMT: {
@@ -401,7 +400,7 @@ class PCodeGenerator {
             st.setTrace(trace);
         }
         vector<Instruction> generate(ASTNode* node) {
-            init();
+            if (cPos > 0) cPos--;
             if (should_trace)
                 cout<<"Building Symbol Table: "<<endl;
             buildST(node);
@@ -411,7 +410,6 @@ class PCodeGenerator {
             }
             genCode(node, false);
             emit(HALT);
-            codepage.resize(cPos);
             if (should_trace)
                 cout<<"Done."<<endl;
             return codepage;

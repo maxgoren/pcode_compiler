@@ -22,6 +22,7 @@ begin
     begin 
         addToBack(2*cnt+1);
         cnt := cnt + 1;
+        printList();
     end
     printList();
 end.
