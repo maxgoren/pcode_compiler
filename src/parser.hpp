@@ -281,7 +281,10 @@ class Parser {
                     node->child[0] = t;
                 }
             } else if (expect(TK_POST_INC) || expect(TK_POST_DEC)) {
-                
+                ASTNode* t = makeExprNode(UNOP_EXPR, lookahead());
+                match(lookahead().symbol);
+                t->child[0] = node;
+                node = t;
             }
             if (expect(TK_LP)) {
                 ASTNode* t = makeExprNode(FUNC_EXPR, lookahead());

@@ -237,10 +237,29 @@ class PCodeGenerator {
                     genBinOp(node, isAddr);
                 } break;
                 case UNOP_EXPR: {
-                    genCode(node->child[0], isAddr);
                     switch (node->data.symbol) {
-                        case TK_SUB: emit(NEG); break;
-                        case TK_NOT: emit(NOT); break;
+                        case TK_SUB: {
+                            genCode(node->child[0], isAddr);                        
+                            emit(NEG); 
+                        } break;
+                        case TK_NOT: {
+                            genCode(node->child[0], isAddr);
+                            emit(NOT); 
+                        } break;
+                        case TK_POST_INC: {
+                            genCode(node->child[0], true);
+                            genCode(node->child[0], false);
+                            emit(LDC, makeInt(1));
+                            emit(ADD);
+                            emit(STO); 
+                        } break;
+                        case TK_POST_DEC: {
+                            genCode(node->child[0], true);
+                            genCode(node->child[0], false);
+                            emit(LDC, makeInt(1));
+                            emit(SUB);
+                            emit(STO); 
+                        } break;
                         default: break;
                     }
                 } break;
