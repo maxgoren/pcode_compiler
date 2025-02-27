@@ -13,7 +13,8 @@ enum Inst {
     NEG, ADD, SUB,
     MUL, DIV, MOD, NOT,
     EQU, NEQ, LTE, GTE,
-    LT, GT, TS, INC, DEC, 
+    LT, GT, TS, INC, DEC,
+    MATCHRE, 
     PRINT, HALT
 };
 
@@ -29,8 +30,8 @@ string instStr[] = {
     "EQU","NEQ", "LTE", 
     "GTE", "LT", "GT", 
     "TS", "INC", "DEC", 
+    "MATCHRE",
     "PRINT", 
-    
     "HALT"
 };
 

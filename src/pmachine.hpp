@@ -3,6 +3,9 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
+#include "regex/re_compiler.hpp"
+#include "regex/patternmatcher.hpp"
+#include "regex/nfa.hpp"
 #include "value.hpp"
 #include "vminst.hpp"
 using namespace std;
@@ -136,6 +139,18 @@ class PCodeVM {
             }
             stack[addr] = stack[sp];
             sp -= 2;
+        }
+        void matchRegExp() {
+            string pattern = string(getString(stack[sp])->str);
+            sp--;
+            string text = string(getString(stack[sp])->str);
+            sp--;
+            cout<<"text: "<<text<<endl;
+            cout<<"Pattern: "<<pattern<<endl;
+            NFACompiler reCompiler;
+            NFA nfa = reCompiler.compile(pattern);
+            RegExPatternMatcher pm(nfa, should_trace);
+            stack[++sp] = makeBool(pm.match(text));
         }
         void storeParam() {
             int addr = calculateAddress(getValue(stack[sp]));
@@ -304,6 +319,9 @@ class PCodeVM {
                     case PRINT: {
                         cout<<"\t\t\t\t\t"<<*toString(stack[sp])<<endl;
                         sp--;
+                    } break;
+                    case MATCHRE: {
+                        matchRegExp();
                     } break;
                     case INC: {
                         for (int i = 0; i < getInteger(current().operand); i++) {

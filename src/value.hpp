@@ -34,8 +34,13 @@ std::ostream& operator<<(std::ostream& os, String& strObj) {
 }
 
 struct Function {
-    ASTNode* body;
-    ASTNode* params;
+    string name;
+    int ip;
+    int returnAddr;
+    int numArgs;
+    int numLocals;
+    Function(string n = "", int i = 0, int ra = 0, int na = 0, int nl = 0) : 
+    name(n), ip(i), returnAddr(ra), numArgs(na), numLocals(nl) { }
 };
 
 struct Value {

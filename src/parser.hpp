@@ -112,6 +112,7 @@ class Parser {
                 case TK_FUNC: {
                     node = functionDefinition();
                 } break;
+                case TK_MATCH:
                 case TK_ID: 
                 case TK_LP:
                 case TK_NUM: {
@@ -279,6 +280,8 @@ class Parser {
                     match(TK_ID);
                     node->child[0] = t;
                 }
+            } else if (expect(TK_POST_INC) || expect(TK_POST_DEC)) {
+                
             }
             if (expect(TK_LP)) {
                 ASTNode* t = makeExprNode(FUNC_EXPR, lookahead());
@@ -318,6 +321,16 @@ class Parser {
                 node = makeExprNode(BLESS_EXPR, lookahead());
                 match(TK_NEW);
                 node->child[0] = simpleExpr();
+                return node;
+            }
+            if (expect(TK_MATCH)) {
+                node = makeExprNode(REG_EXPR, lookahead());
+                match(TK_MATCH);
+                match(TK_LP);
+                node->child[0] = simpleExpr();
+                match(TK_COMA);
+                node->child[1] = simpleExpr();
+                match(TK_RP);
                 return node;
             }
             return node;

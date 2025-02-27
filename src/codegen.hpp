@@ -272,6 +272,11 @@ class PCodeGenerator {
                     int saddr = st.allocStruct(node->child[LEFTCHILD]->data.strval);
                     emit(LDA, makeInt(saddr));
                 } break;
+                case REG_EXPR: {
+                    genCode(node->child[0], false);
+                    genCode(node->child[1], false);
+                    emit(MATCHRE);
+                } break;
                 default:
                     break;
             }

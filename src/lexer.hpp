@@ -87,23 +87,26 @@ class Lexer {
             if (id == "while")   return Token(TK_WHILE, "while");
             if (id == "program") return Token(TK_PROGRAM, "program");
             if (id == "procedure") return Token(TK_FUNC, "procedure");
+            if (id == "def")     return Token(TK_FUNC, "def");
             if (id == "struct")  return Token(TK_STRUCT, "struct");
             if (id == "record")  return Token(TK_STRUCT, "record");
             if (id == "begin")   return Token(TK_BEGIN, "begin");
             if (id == "end")     return Token(TK_END, "end");
             if (id == "new")     return Token(TK_NEW, "new");
             if (id == "ref")     return Token(TK_REF, "ref");
+            if (id == "matchre")   return Token(TK_MATCH, "matchre");
             return Token(TK_ID, id);
         }
         Token checkSpecials(StringBuffer& sb) {
             switch (sb.get()) {
                 case '*': return Token(TK_MUL, "*");
-                case '+': return Token(TK_ADD, "+");
                 case '/': return Token(TK_DIV, "/");
                 case '(': return Token(TK_LP, "(");
                 case ')': return Token(TK_RP, ")");
                 case '[': return Token(TK_LB, "[");
                 case ']': return Token(TK_RB, "]");
+                case '{': return Token(TK_BEGIN, "{");
+                case '}': return Token(TK_END, "}");
                 case '&': return Token(TK_FUNC, "&");
                 case '.': return Token(TK_PERIOD, ".");
                 case ',': return Token(TK_COMA, ",");
@@ -111,10 +114,20 @@ class Lexer {
                 case '!': return Token(TK_NOT, "!");
                 default: break;
             }
+            if (sb.get() == '+') {
+                sb.advance();
+                if (sb.get() == '+') {
+                    return Token(TK_POST_INC, "++");
+                }
+                sb.rewind();
+                return Token(TK_ADD, "+");
+            }
             if (sb.get() == '-') {
                 sb.advance(); 
                 if (sb.get() == '>') {
                     return Token(TK_PRODUCES, "->");
+                } else if (sb.get() == '-') {
+                    return Token(TK_POST_DEC, "--");
                 }
                 sb.rewind();
                 return Token(TK_SUB, "-");
