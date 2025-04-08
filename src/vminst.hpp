@@ -43,7 +43,7 @@ struct Instruction {
 };
 
 std::ostream& operator<<(std::ostream& os, const Instruction& inst) {
-    os<<"("<<setw(4)<<instStr[inst.instruction]<<", "<<*toString(inst.operand)<<", "<<*toString(inst.nestlevel)<<")";
+    os<<"("<<setw(5)<<instStr[inst.instruction]<<", "<<setw(5)<<*toString(inst.operand)<<","<<setw(5)<<" "<<*toString(inst.nestlevel)<<")";
     return os;
 }
 

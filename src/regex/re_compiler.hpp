@@ -109,7 +109,8 @@ class NFACompiler {
             nnfa.addTransition(Transition(nnfa.getStart(), nnfa.getAccept(), new EpsilonEdge()));
             return nnfa;
         }
-        //There is more than likely a more efficient way of doing, but heres the plan:
+
+        //There is more than likely a more efficient way of doing this - but heres the plan:
         // initialize N new NFA's as N(n) where n is the nfa to be repeated, placing them into a stack.
         // Initialize our NFA. 'F' that will be the NFA(n, n, n...), store F's accept state as p.
         // While NFA's remain on the stack, remove top nfa from stack and store as t.

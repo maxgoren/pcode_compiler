@@ -21,7 +21,8 @@ begin
     end
     while (cnt < 30) do
     begin
-        println fibo(cnt);
+        println cnt + ": " + fibo(cnt);
         cnt := cnt + 1;
     end
+    println fib(6);
 end.

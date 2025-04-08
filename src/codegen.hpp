@@ -27,12 +27,10 @@ class PCodeGenerator {
             if (highCI < cPos) highCI = cPos;
         }
         void emit(Inst op, Value operand) {
-            codepage[cPos++] = Instruction(op, operand);
-            if (highCI < cPos) highCI = cPos;
+            emit(op, operand, makeInt(0));
         }
-        void emit(Inst inst) {
-            codepage[cPos++] = Instruction(inst);
-            if (highCI < cPos) highCI = cPos;
+        void emit(Inst op) {
+            emit(op, makeNil(), makeInt(0));
         }
         string emitLabel() {
             string label = makeLabel();
@@ -90,71 +88,48 @@ class PCodeGenerator {
             int s1 = skipEmit(1);
             genCode(node->child[1], isAddr);
             emit(JMP, makeInt(getLabelAddr(test_label)));
-            //string exit_label = emitLabel();
             int c1 = skipEmit(0);
             backup(s1);
-            emit(JPC, makeInt(c1)); //getLabelAddr(exit_label)));
+            emit(JPC, makeInt(c1));
             restore();
         }
-        void genStmt(ASTNode* node, bool isAddr) {
-            switch (node->type.stmt) {
-                case PROGRAM_STMT: {
-                    genCode(node->child[0], isAddr);
-                } break;
-                case EXPR_STMT: {
-                    genCode(node->child[0], isAddr);
-                } break;
-                case PRINT_STMT: {
-                    genCode(node->child[0], isAddr);
-                    emit(PRINT);
-                } break;
-                case REF_STMT: {
-                    LocalVar* lv = st.getVar(node->data.strval);
-                    emit(LDA, makeInt(lv->loc), makeInt(lv->depth));
-                    genparam = true;
-                    genCodeNS(node->child[0],true);
-                    genparam = false;
-                    emit(STN);
-                }  break;
-                case LET_STMT: {
-                    LocalVar* lv = st.getVar(node->data.strval);
-                    emit(LDA, makeInt(lv->loc), makeInt(lv->depth));
-                    genCodeNS(node->child[0],false);
-                    emit(STN);
-                } break;
-                case FUNC_DEF_STMT: {
-                    st.openScope(node->data.strval);
-                    int s1 = skipEmit(2);
-                    emit(ENT, makeString(node->data.strval));
-                    genCode(node->child[1], isAddr);
-                    emit(RET);
-                    int c1 = skipEmit(0);
-                    backup(s1);
-                    emit(JMP, makeInt(c1));
-                    string pre = makeLabel();
-                    emit(LAB, makeString(pre));
-                    restore();
-                    st.closeScope();
-                } break;
-                case IF_STMT: {
-                    genIfStmt(node, isAddr);
-                } break;
-                case WHILE_STMT: {
-                    genWhileStmt(node, isAddr);
-                } break;
-                case RETURN_STMT: {
-                    genCode(node->child[0], isAddr);
-                } break;
-                case BLOCK_STMT: {
-                    st.openScope(node->data.strval);
-                    emit(MST);
-                    emit(ENT);
-                    genCode(node->child[0], false);
-                    emit(RET);
-                    st.closeScope();
-                } break;
-                default: break;
-            }
+        void genFunctionDefinition(ASTNode* node, bool isAddr) {
+            st.openScope(node->data.strval);
+            int s1 = skipEmit(1);
+            emit(ENT, makeString(node->data.strval));
+            genCode(node->child[1], isAddr);
+            emit(RET);
+            int c1 = skipEmit(0);
+            backup(s1);
+            emit(JMP, makeInt(c1));
+            restore();
+            st.closeScope();
+        }
+        void genLetStmnt(ASTNode* node, bool isAddr) {
+            LocalVar* lv = st.getVar(node->data.strval);
+            emit(LDA, makeInt(lv->loc), makeInt(lv->depth));
+            genCodeNS(node->child[0],false);
+            emit(STN);
+        }
+        void genRefStmt(ASTNode* node, bool isAddr) {
+            LocalVar* lv = st.getVar(node->data.strval);
+            emit(LDA, makeInt(lv->loc), makeInt(lv->depth));
+            genparam = true;
+            genCodeNS(node->child[0],true);
+            genparam = false;
+            emit(STN);
+        }
+        void genBlockStmt(ASTNode* node, bool isAddr) {
+            st.openScope(node->data.strval);
+            emit(MST);
+            emit(ENT);
+            genCode(node->child[0], false);
+            emit(RET);
+            st.closeScope();
+        }
+        void genPrintStmt(ASTNode* node, bool isAddr) {
+            genCode(node->child[0], isAddr);
+            emit(PRINT);
         }
         void genBinOp(ASTNode* node, bool isAddr) {
             genCode(node->child[0], isAddr);
@@ -181,6 +156,33 @@ class PCodeGenerator {
                     break;
             }
         }
+        void genUnaryOp(ASTNode* node, bool isAddr) {
+            switch (node->data.symbol) {
+                case TK_SUB: {
+                    genCode(node->child[0], isAddr);                        
+                    emit(NEG); 
+                } break;
+                case TK_NOT: {
+                    genCode(node->child[0], isAddr);
+                    emit(NOT); 
+                } break;
+                case TK_POST_INC: {
+                    genCode(node->child[0], true);
+                    genCode(node->child[0], false);
+                    emit(LDC, makeInt(1));
+                    emit(ADD);
+                    emit(STO); 
+                } break;
+                case TK_POST_DEC: {
+                    genCode(node->child[0], true);
+                    genCode(node->child[0], false);
+                    emit(LDC, makeInt(1));
+                    emit(SUB);
+                    emit(STO); 
+                } break;
+                default: break;
+            }
+        }
         bool hasSubscript(ASTNode* node) {
             return (node->child[0] != nullptr && node->child[0]->nk == EXPR_NODE && node->child[0]->type.expr == SUBSCRIPT_EXPR);
         }
@@ -188,116 +190,101 @@ class PCodeGenerator {
             return (node->child[0] != nullptr && node->child[0]->nk == EXPR_NODE && node->child[0]->type.expr == FIELD_EXPR);
         }
         bool isField;
+        void generateIDExpression(ASTNode* node, bool isAddr) {
+            LocalVar* lv = st.getVar(node->data.strval);
+            if (lv == nullptr) {
+                cout<<"Error: attempt to reference undelcared variable: "<<node->data.strval<<endl;
+                emit(HALT);
+                return;
+            }
+            if (isField) {
+                emit(LDF, makeInt(lv->loc));
+            } else if ((isAddr && !genparam) || hasSubscript(node) || hasField(node)) {
+                emit(LDA, makeInt(lv->loc), makeInt(0));
+            } else {
+                if (genparam) {
+                    emit(isAddr ? LRP:LDP, makeInt(lv->loc), makeInt(0));
+                } else {
+                    emit(LOD, makeInt(lv->loc), makeInt(0));
+                }
+            }
+            if (node->child[LEFTCHILD] != nullptr) {
+                if (hasField(node)) {
+                    isField = true;
+                    st.openStruct(node);
+                    genExpr(node->child[LEFTCHILD], isAddr);
+                    st.closeStruct();
+                    isField = false;
+                } else {
+                    genExpr(node->child[LEFTCHILD], isAddr);
+                }
+            }
+        }
+        void genSubscriptExpression(ASTNode* node, bool isAddr) {
+            genCodeNS(node->child[LEFTCHILD], false);
+            emit(IXA, makeInt(1), makeInt(0));
+            if (!isAddr) emit(LDI, makeInt(0));
+        }
+        void genAssignmentExpr(ASTNode* node, bool isAddr) {
+            genExpr(node->child[LEFTCHILD], true);
+            genExpr(node->child[RIGHTCHILD], false);
+            emit(STO);
+        }
+        void genFunctionCall(ASTNode* node, bool isAddr) {
+            emit(MST);
+            ASTNode* t = node->child[1];
+            genparam = true;
+            int sloc = 0;
+            while (t != nullptr) {
+                genCodeNS(t, isAddr);
+                t = t->next;
+                sloc++;
+            }
+            genparam = false;
+            int numLocals = st.scopeSize(node->data.strval)-sloc; 
+            emit(INC, makeInt(numLocals < 0 ? 0:numLocals));
+            emit(CAL, makeInt(getFunctionAddr(node->data.strval)));
+        }
+        void genBlessExpr(ASTNode* node) {
+            int saddr = st.allocStruct(node->child[LEFTCHILD]->data.strval);
+            emit(LDA, makeInt(saddr));
+        }
+        void genMatchRegExpr(ASTNode* node, bool isAddr) {
+            genCode(node->child[0], false);
+            genCode(node->child[1], false);
+            emit(MATCHRE);
+        }
         void genExpr(ASTNode* node, bool isAddr) {
             switch (node->type.expr) {
-                case ID_EXPR: {
-                    LocalVar* lv = st.getVar(node->data.strval);
-                    if (lv == nullptr) {
-                        cout<<"Error: attempt to reference undelcared variable: "<<node->data.strval<<endl;
-                        emit(HALT);
-                        return;
-                    }
-                    if (isField) {
-                        emit(LDF, makeInt(lv->loc));
-                    } else if ((isAddr && !genparam) || hasSubscript(node) || hasField(node)) {
-                        emit(LDA, makeInt(lv->loc), makeInt(0));
-                    } else {
-                        if (genparam) {
-                            emit(isAddr ? LRP:LDP, makeInt(lv->loc), makeInt(0));
-                        } else {
-                            emit(LOD, makeInt(lv->loc), makeInt(0));
-                        }
-                    }
-                    if (node->child[LEFTCHILD] != nullptr) {
-                        if (hasField(node)) {
-                            isField = true;
-                            st.openStruct(node);
-                            genExpr(node->child[LEFTCHILD], isAddr);
-                            st.closeStruct();
-                            isField = false;
-                        } else {
-                            genExpr(node->child[LEFTCHILD], isAddr);
-                        }
-                    }
-                } break;
-                case FIELD_EXPR: {
-                    genCodeNS(node->child[LEFTCHILD], false);
-                    emit(IXA, makeInt(1), makeInt(0));
-                    if (!isAddr) emit(LDI, makeInt(0));
-                } break;
-                case SUBSCRIPT_EXPR: {
-                    genCodeNS(node->child[LEFTCHILD], false);
-                    emit(IXA, makeInt(1), makeInt(0));
-                    if (!isAddr) emit(LDI, makeInt(0));
-                } break;
-                case CONST_EXPR: {
-                    emit(LDC, makeReal(stod(node->data.strval)));
-                } break;
-                case BINOP_EXPR: {
-                    genBinOp(node, isAddr);
-                } break;
-                case UNOP_EXPR: {
-                    switch (node->data.symbol) {
-                        case TK_SUB: {
-                            genCode(node->child[0], isAddr);                        
-                            emit(NEG); 
-                        } break;
-                        case TK_NOT: {
-                            genCode(node->child[0], isAddr);
-                            emit(NOT); 
-                        } break;
-                        case TK_POST_INC: {
-                            genCode(node->child[0], true);
-                            genCode(node->child[0], false);
-                            emit(LDC, makeInt(1));
-                            emit(ADD);
-                            emit(STO); 
-                        } break;
-                        case TK_POST_DEC: {
-                            genCode(node->child[0], true);
-                            genCode(node->child[0], false);
-                            emit(LDC, makeInt(1));
-                            emit(SUB);
-                            emit(STO); 
-                        } break;
-                        default: break;
-                    }
-                } break;
-                case RELOP_EXPR: {
-                    genRelOp(node, isAddr);
-                } break;
-                case STR_EXPR: {
-                    emit(LDC, makeString(node->data.strval));
-                } break;
-                case ASSIGN_EXPR: {
-                    genExpr(node->child[LEFTCHILD], true);
-                    genExpr(node->child[RIGHTCHILD], false);
-                    emit(STO);
-                } break;
-                case FUNC_EXPR: {
-                    emit(MST);
-                    ASTNode* t = node->child[1];
-                    genparam = true;
-                    int sloc = 0;
-                    while (t != nullptr) {
-                        genCodeNS(t, isAddr);
-                        t = t->next;
-                        sloc++;
-                    }
-                    genparam = false;
-                    emit(CAL, makeInt(getFunctionAddr(node->data.strval)));
-                } break;
-                case BLESS_EXPR: {
-                    int saddr = st.allocStruct(node->child[LEFTCHILD]->data.strval);
-                    emit(LDA, makeInt(saddr));
-                } break;
-                case REG_EXPR: {
-                    genCode(node->child[0], false);
-                    genCode(node->child[1], false);
-                    emit(MATCHRE);
-                } break;
+                case SUBSCRIPT_EXPR: { genSubscriptExpression(node, isAddr); } break;
+                case ID_EXPR:     { generateIDExpression(node, isAddr); } break;
+                case FIELD_EXPR:  { genSubscriptExpression(node, isAddr); } break;
+                case CONST_EXPR:  { emit(LDC, makeReal(stod(node->data.strval))); } break;
+                case STR_EXPR:    { emit(LDC, makeString(node->data.strval)); } break;
+                case BINOP_EXPR:  { genBinOp(node, isAddr); } break;
+                case UNOP_EXPR:   { genUnaryOp(node, isAddr); } break;
+                case RELOP_EXPR:  { genRelOp(node, isAddr); } break;
+                case ASSIGN_EXPR: { genAssignmentExpr(node, isAddr); } break;
+                case FUNC_EXPR:  {  genFunctionCall(node, isAddr); } break;
+                case BLESS_EXPR: {  genBlessExpr(node); } break;
+                case REG_EXPR:   {  genMatchRegExpr(node, isAddr); } break;
                 default:
                     break;
+            }
+        }
+        void genStmt(ASTNode* node, bool isAddr) {
+            switch (node->type.stmt) {
+                case PROGRAM_STMT: { genCode(node->child[0], isAddr); } break;
+                case EXPR_STMT:    { genCode(node->child[0], isAddr); } break;
+                case PRINT_STMT:   { genPrintStmt(node, isAddr); } break;
+                case REF_STMT:     { genRefStmt(node, isAddr); }  break;
+                case LET_STMT:     { genLetStmnt(node, isAddr); } break;
+                case FUNC_DEF_STMT: { genFunctionDefinition(node, isAddr); } break;
+                case IF_STMT:      { genIfStmt(node, isAddr); } break;
+                case WHILE_STMT:   { genWhileStmt(node, isAddr); } break;
+                case RETURN_STMT:  { genCode(node->child[0], isAddr); } break;
+                case BLOCK_STMT:   { genBlockStmt(node, isAddr); } break;
+                default: break;
             }
         }
         void genCodeNS(ASTNode* node, bool isAddr) {
@@ -342,7 +329,12 @@ class PCodeGenerator {
                                 } else {
                                     st.insertVar(node->data.strval);
                                     if (node->child[0] != nullptr && node->child[0]->type.expr == BLESS_EXPR) {
-                                        st.addInstance(node->data.strval, node->child[0]->child[0]->data.strval);
+                                        st.addInstanceType(node->data.strval, node->child[0]->child[0]->data.strval);
+                                        STEntry* ent = st.getEntry(node->data.strval);
+                                        int addr = ent->localvar->loc;
+                                        ent->type = STRUCTDEF;
+                                        ent->addr = addr;
+                                        ent->structure = st.getStruct(node->child[0]->child[0]->data.strval);
                                     }
                                     if (should_trace)
                                         cout<<node->data.strval<<" added to symbol table"<<endl;
@@ -381,7 +373,7 @@ class PCodeGenerator {
                             case ID_EXPR: {
                                 if (hasField(node)) {
                                     ASTNode* t = node->child[0];
-                                    Scope* ts = st.getStruct(st.getType(node->data.strval));
+                                    Scope* ts = st.getStruct(st.getInstanceType(node->data.strval));
                                     if (ts != nullptr) {
                                         if (should_trace)
                                             cout<<"Getting field "<<t->child[0]->data.strval<<" ";
@@ -394,6 +386,9 @@ class PCodeGenerator {
                                 if (st.getVar(node->data.strval) == nullptr) {
                                     cout<<"Error: undeclared ass variable trying to be used: "<<node->data.strval<<endl;
                                 }     
+                            } break;
+                            case BLESS_EXPR: {
+
                             } break;
                         };
                     } break;

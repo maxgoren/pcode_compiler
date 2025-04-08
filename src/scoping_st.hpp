@@ -97,7 +97,8 @@ class ScopingSymbolTable {
         int localAddr;
         int heapAddr;
         vector<int> freelist;
-        STEntry* get(string name, DefType type) {
+        unordered_map<string, string> instanceTypes;
+        STEntry* get(string name) {
             if (should_trace) {
                 cout<<"Searching for: "<<name<<" ";
             }
@@ -200,7 +201,7 @@ class ScopingSymbolTable {
             return insertVar(name, 1);
         }
         LocalVar* getVar(string name) {
-            STEntry* ent = get(name, VARDEF);
+            STEntry* ent = get(name);
             if (ent->type == VARDEF) {
                 return ent->localvar;
             } else if (ent->type == STRUCTDEF) {
@@ -222,7 +223,7 @@ class ScopingSymbolTable {
             return ns;
         }
         Scope* getProc(string name) {
-            STEntry* ent = get(name, PROCDEF);
+            STEntry* ent = get(name);
             return ent->type == PROCDEF ? ent->procedure:nullptr;
         }
         void openScope(string name) {
@@ -260,7 +261,7 @@ class ScopingSymbolTable {
             return ns;
         }
         Scope* getStruct(string name) {
-            STEntry* ent = get(name, STRUCTDEF);
+            STEntry* ent = get(name);
             return ent->type == STRUCTDEF ? ent->structure:nullptr;
         }
         LocalVar* getFieldFromStruct(Scope* stScope, string fieldname) {
@@ -276,14 +277,13 @@ class ScopingSymbolTable {
             }
             return nullptr;
         }
-        string getType(string name) {
+        string getInstanceType(string name) {
             return instanceTypes[name];
         }
-        void addInstance(string instanceName, string typeName) {
+        void addInstanceType(string instanceName, string typeName) {
             instanceTypes[instanceName] = typeName;
             cout<<instanceName<<" is an instance of "<<typeName<<endl;
         }
-        unordered_map<string, string> instanceTypes;
         void openStruct(ASTNode* node) {
             string name = node->data.strval;
             int size = 1;
@@ -292,7 +292,7 @@ class ScopingSymbolTable {
                 size++;
                 t = t->next;
             }
-            Scope* st = getStruct(getType(name));
+            Scope* st = getStruct(getInstanceType(name));
             if (st == nullptr) {
                 st = insertStruct(name, size);
             }
@@ -319,6 +319,9 @@ class ScopingSymbolTable {
             int nextAddr = heapAddr--;
             heapAddr -= st->numEntries;
             return nextAddr;
+        }
+        STEntry* getEntry(string name) {
+            return get(name);
         }
         void print() {
             cout<<"Symbol Table: "<<endl;

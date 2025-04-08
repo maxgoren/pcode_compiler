@@ -10,6 +10,20 @@
 #include "vminst.hpp"
 using namespace std;
 
+struct StackFrame {
+    int returnAddr;
+    int staticLink;
+    int dynamicLink;
+    int baseptr;
+    StackFrame(int bp, int dl, int sl, int ra) {
+        returnAddr = ra;
+        staticLink = sl;
+        dynamicLink = dl;
+        baseptr = bp;
+    }
+};
+const int SF_SLOTS = 4;
+
 class PCodeVM {
     private:
         bool should_trace;
@@ -36,7 +50,7 @@ class PCodeVM {
                 np = getValue(stack[np+1]);
                 lvl--;
             }
-            return np+4;
+            return np+SF_SLOTS;
         }
         int getValue(Value val) {
             return  val.type == AS_INT ? getInteger(val):getReal(val);
@@ -47,7 +61,8 @@ class PCodeVM {
                 bn = base(getInteger(current().nestlevel));
             if (should_trace) {
                 cout<<"Relative Addr: "<<offset<<endl;
-                cout<<"Calculated ad: "<<bn+offset<<endl;
+                cout<<"BP: "<<bn<<endl;
+                cout<<"Calculated ad: "<<bn+SF_SLOTS+offset<<endl;
             }
             return bn+offset;
         }
@@ -85,13 +100,13 @@ class PCodeVM {
         void loadReferenceParam() {
             sp += 1;
             int os = getValue(current().operand);
-            int addr = os < 2000 ? getValue(stack[bp+1])+4 + os:os;
+            int addr = os < 2000 ? getValue(stack[bp+1])+SF_SLOTS + os:os;
             stack[sp] = makeInt(addr);
         }
         void loadParam() {
             sp += 1;
             int os = getValue(current().operand);
-            int addr = os < 2000 ? getValue(stack[bp+1])+4 + os:os;
+            int addr = os < 2000 ? getValue(stack[bp+1])+SF_SLOTS + os:os;
             stack[sp] = stack[addr];
         }
         void loadField() {
@@ -141,10 +156,8 @@ class PCodeVM {
             sp -= 2;
         }
         void matchRegExp() {
-            string pattern = string(getString(stack[sp])->str);
-            sp--;
-            string text = string(getString(stack[sp])->str);
-            sp--;
+            string pattern = string(getString(stack[sp--])->str);
+            string text = string(getString(stack[sp--])->str);
             cout<<"text: "<<text<<endl;
             cout<<"Pattern: "<<pattern<<endl;
             NFACompiler reCompiler;
@@ -158,6 +171,7 @@ class PCodeVM {
             sp -= 2;
         }
         void storeNonDestructive() {
+            //int addr = calculateAddress(getValue(stack[sp-1]));
             int addr = getValue(stack[sp-1]);
             if (should_trace) {
                 cout<<"Calculated ad: "<<addr<<endl;
@@ -190,19 +204,19 @@ class PCodeVM {
             switch (current().instruction) {
                 case ADD: {
                     sp -= 1;
-                    stack[sp] = add(stack[sp], stack[sp+1]);
+                    stack[sp] = Add(stack[sp], stack[sp+1]);
                 } break;
                 case SUB: {
                     sp -= 1;
-                    stack[sp] = sub(stack[sp], stack[sp+1]);
+                    stack[sp] = Sub(stack[sp], stack[sp+1]);
                 } break;
                 case MUL: {
                     sp -= 1;
-                    stack[sp] = mul(stack[sp], stack[sp+1]);
+                    stack[sp] = Mul(stack[sp], stack[sp+1]);
                 } break;
                 case DIV: {
                     sp -= 1;
-                    stack[sp] = div(stack[sp], stack[sp+1]);
+                    stack[sp] = Div(stack[sp], stack[sp+1]);
                 } break;
                 case EQU:{
                     sp -= 1;
@@ -230,15 +244,24 @@ class PCodeVM {
                 } break;
             };
         }
+        void incTop() {
+            for (int i = 0; i < getInteger(current().operand); i++) {
+                stack[++sp] = makeInt(0);
+            }
+        }
+        void pushSP() {
+            sp += 1;
+            stack[sp] = makeInt(sp);
+        }
         inline void nop() { }
     public:
         PCodeVM(bool trace = false) {
             ip = 0;
-            bp = 0;
-            sp = 4;
+            bp = 1;
             dl = 1;
             sl = 2;
             ra = 3;
+            sp = 4;
             stack.reserve(MAX_STACK);
             codePage.reserve(MAX_STACK);
             should_trace = trace;
@@ -256,82 +279,31 @@ class PCodeVM {
             while (current().instruction != HALT) {
                 nextInstruction();
                 switch(current().instruction) {
-                    case LAB: {
-                        nop();
-                    } break;
-                    case JMP: {
-                        doJump();
-                    } break;
-                    case JPC: {
-                        jumpConditional();
-                    } break;
-                    case LDC: {
-                        loadConstant();
-                    } break;
-                    case LOD: {
-                        loadFromAddress();
-                    } break;
-                    case LDA: {
-                        loadAddress();
-                    } break;
-                    case LRP: {
-                        loadReferenceParam();
-                    } break;
-                    case LDP: {
-                        loadParam();
-                    } break;
-                    case LDF: {
-                        loadField();
-                    } break;
-                    case LDI: {
-                        indirectLoad();
-                    } break;
-                    case IXA: {
-                        indexedAccess();
-                    } break;
-                    case STO: {
-                        storeDestructive();
-                    } break;
-                    case STP: {
-                        storeParam();
-                    } break;
-                    case STN: {
-                        storeNonDestructive();
-                    } break;
-                    case MST: {
-                        markStack();
-                    } break;
-                    case CAL: {
-                        callProcedure();
-                    } break;
-                    case ENT: {
-                        nop();
-                    } break;
-                    case RET: {
-                        returnFromProcedure();
-                    } break;
-                    case NEG: {
-                        stack[sp] = neg(stack[sp]);
-                    } break;
-                    case NOT: {
-                        stack[sp] = Not(stack[sp]);
-                    } break;
-                    case PRINT: {
-                        cout<<"\t\t\t\t\t"<<*toString(stack[sp])<<endl;
-                        sp--;
-                    } break;
-                    case MATCHRE: {
-                        matchRegExp();
-                    } break;
-                    case INC: {
-                        for (int i = 0; i < getInteger(current().operand); i++) {
-                            sp += 1;
-                            stack[sp] = makeInt(0);
-                        }
-                    } break;
+                    case LAB: { nop(); } break;
+                    case JMP: { doJump(); } break;
+                    case JPC: { jumpConditional(); } break;
+                    case LDC: { loadConstant(); } break;
+                    case LOD: { loadFromAddress(); } break;
+                    case LDA: { loadAddress(); } break;
+                    case LRP: { loadReferenceParam(); } break;
+                    case LDP: { loadParam(); } break;
+                    case LDF: { loadField(); } break;
+                    case LDI: { indirectLoad(); } break;
+                    case IXA: { indexedAccess(); } break;
+                    case STO: { storeDestructive(); } break;
+                    case STP: { storeParam(); } break;
+                    case STN: { storeNonDestructive(); } break;
+                    case MST: { markStack(); } break;
+                    case CAL: { callProcedure(); } break;
+                    case ENT: { nop(); } break;
+                    case RET: { returnFromProcedure(); } break;
+                    case NEG: { stack[sp] = Neg(stack[sp]); } break;
+                    case NOT: { stack[sp] = Not(stack[sp]); } break;
+                    case PRINT: { cout<<"\t\t\t\t\t"<<*toString(stack[sp--])<<endl; } break;
+                    case MATCHRE: { matchRegExp(); } break;
+                    case INC: { incTop(); } break;
                     case TS: {
-                        sp += 1;
-                        stack[sp] = makeInt(sp);
+                        pushSP();
                     } break;
                     case HALT:
                         break;
@@ -339,10 +311,12 @@ class PCodeVM {
                         binaryOperator();
                         break;
                 }
-                //if (should_trace && current().instruction != HALT)
-                //    printStack();
+                if (should_trace && current().instruction != HALT)
+                    printStack();
+                        
             }
         }
+       
         void printStack() {
             int arn = 0;
             cout<<"[---------------------------------------------------]"<<endl;

@@ -6,11 +6,11 @@ begin
         println a+b;
     end
     procedure ex() begin
-        show();
         let a := "inner";
         let b := "bloop";
         show();
+        println a+b;
     end
+    show();
     ex();
-    println a+b;
 end.

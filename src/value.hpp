@@ -120,16 +120,9 @@ Value concatStrings(Value lhs, Value rhs) {
     String* lstr = lhs.strval;
     String* rstr = rhs.strval;
     char* tmp = new  char[lstr->len + rstr->len];
-    int k = 0;
-    while (k < lstr->len) {
-        tmp[k] = lstr->str[k];
-        k++;
-    }
-    int i = 0;
-    while (i < rstr->len) {
-        tmp[k] = rstr->str[i];
-        k++; i++;
-    }
+    int k = 0, i = 0;
+    while (k < lstr->len) { tmp[k] = lstr->str[k]; k++; }
+    while (i < rstr->len) { tmp[k++] = rstr->str[i++]; }
     String* str = new String;
     str->str = tmp;
     str->len = k;
@@ -147,6 +140,8 @@ Value repeatString(Value strVal, int numRepeat) {
 }
 
 bool compareStrings(String* lhs, String* rhs) {
+    if (lhs->len != rhs->len)
+        return false;
     int i = 0, j = 0;
     while (i < lhs->len && j < rhs->len) {
         if (lhs->str[i] != rhs->str[j]) {
@@ -186,7 +181,7 @@ String* toString(Value val) {
 
 std::string toStdString(Value obj) {
     String* str = toString(obj);
-    return str->str;
+    return string(str->str, str->len);
 }
 
 std::ostream& operator<<(std::ostream& os, Value& val) {
@@ -243,7 +238,7 @@ bool isZero(Value val) {
     return false;
 }
 
-Value add(Value lhs, Value rhs) {
+Value Add(Value lhs, Value rhs) {
     if (lhs.type == AS_STRING || rhs.type == AS_STRING)
         return concatStrings(makeString(toString(lhs)), makeString(toString(rhs)));
     if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
@@ -253,7 +248,7 @@ Value add(Value lhs, Value rhs) {
     return makeInt(0);    
 }
 
-Value sub(Value lhs, Value rhs) {
+Value Sub(Value lhs, Value rhs) {
     if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         return makeReal(a - b);
@@ -261,7 +256,7 @@ Value sub(Value lhs, Value rhs) {
     return makeInt(0);    
 }
 
-Value mul(Value lhs, Value rhs) {
+Value Mul(Value lhs, Value rhs) {
     if (lhs.type == AS_STRING || rhs.type == AS_STRING) {
         if (lhs.type == AS_STRING) {
             return repeatString(lhs, getPrimitive(rhs));
@@ -276,7 +271,7 @@ Value mul(Value lhs, Value rhs) {
     return makeInt(0);    
 }
 
-Value div(Value lhs, Value rhs) {
+Value Div(Value lhs, Value rhs) {
     if ((lhs.type == AS_INT || lhs.type == AS_REAL) && (rhs.type == AS_INT || rhs.type == AS_REAL)) {
         auto [a, b] = getPrimVals(lhs, rhs);
         if (b == 0) {
@@ -336,7 +331,7 @@ Value gt(Value lhs, Value rhs) {
     return makeBool(toStdString(lhs) > toStdString(rhs));    
 }
 
-Value neg(Value lhs) {
+Value Neg(Value lhs) {
     if (lhs.type == AS_INT || lhs.type == AS_REAL || lhs.type == AS_BOOL) {
         double a = 0;
         switch (lhs.type) {

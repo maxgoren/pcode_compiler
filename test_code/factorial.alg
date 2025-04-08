@@ -14,6 +14,6 @@ begin
     let x := 3;
     while (x < 10) do begin
         println fact(x);
-        x := x + 1;
+        x++;
     end
 end.

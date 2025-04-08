@@ -13,5 +13,6 @@ begin
     tmp.next := 0;
     println node;
     println node.info;
+    println tmp;
     println tmp.info;
 end.
